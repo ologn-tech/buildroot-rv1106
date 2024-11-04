@@ -1,0 +1,9 @@
+if BR2_TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM
+
+config BR2_TOOLCHAIN_EXTERNAL_PREFIX
+	default "arm-rockchip830-linux-uclibcgnueabihf"
+
+config BR2_PACKAGE_PROVIDES_TOOLCHAIN_EXTERNAL
+	default "toolchain-external-rockchip-arm"
+
+endif
