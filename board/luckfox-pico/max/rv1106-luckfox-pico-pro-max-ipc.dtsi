@@ -43,10 +43,10 @@
 	vdd_arm: vdd-arm {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_arm";
-		regulator-min-microvolt = <900000>;
-		regulator-max-microvolt = <900000>;
+		regulator-min-microvolt = <800000>;
+		regulator-max-microvolt = <1000000>;
+		regulator-init-microvolt = <900000>;
 		regulator-always-on;
-
 		regulator-boot-on;
 	};
 	leds: leds {
@@ -311,9 +311,9 @@
     fps = <30>;
     buswidth = <8>;
     debug = <0x7>;
-    led-gpios = <&gpio2 RK_PB0 GPIO_ACTIVE_LOW>;//BL
-    dc = <&gpio2 RK_PB1 GPIO_ACTIVE_HIGH>;      //DC
-    reset = <&gpio1 RK_PC3 GPIO_ACTIVE_LOW>;    //RES
+    led-gpios = <&gpio2 RK_PB0 GPIO_ACTIVE_HIGH>;//BL
+    dc-gpios = <&gpio2 RK_PB1 GPIO_ACTIVE_HIGH>;      //DC
+    reset-gpios = <&gpio1 RK_PC3 GPIO_ACTIVE_LOW>;    //RES
   };
 };
 // I2C
