@@ -4,12 +4,11 @@
 #
 ################################################################################
 
-TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_SITE = https://github.com/LuckfoxTECH/luckfox-pico.git
-TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_SITE_METHOD = git
-TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_VERSION = e1caff31f64cbb1e7dbed793b764bbf1c020d6c7
+TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_SITE = $(LUCKFOX_PICO_DL_DIR)/git/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf
+TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_SITE_METHOD = local
 
-define TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_EXTRACT_CMDS
-	cp -rf $(TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_DL_DIR)/git/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/* $(@D)
-endef
+TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_PRE_CONFIGURE_HOOKS += TOOLCHAIN_EXTERNAL_MOVE
+
+TOOLCHAIN_EXTERNAL_ROCKCHIP_ARM_DEPENDENCIES = luckfox-pico
 
 $(eval $(toolchain-external-package))

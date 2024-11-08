@@ -1,0 +1,6 @@
+config BR2_PACKAGE_LUCKFOX_PICO
+	bool "luckfox-pico"
+	help
+	  luckfox-pico sdk
+
+	  https://github.com/LuckfoxTECH/luckfox-pico
