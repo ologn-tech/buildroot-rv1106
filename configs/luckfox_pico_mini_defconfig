@@ -14,9 +14,8 @@ BR2_TARGET_GENERIC_ISSUE="Welcome to Luckfox Pico"
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_GIT=y
-BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/rockchip-linux/kernel.git"
-BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION="cbaedd4be381bca40d03e85829f9d9b6692e41cf"
-BR2_LINUX_KERNEL_DEFCONFIG="rv1106"
+BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/ologn-tech/linux-rv1106.git"
+BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION="24ab4f26ef4270d678595aee738f15a21c7338d3"
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="board/luckfox-pico/common/linux.config"
 BR2_LINUX_KERNEL_CUSTOM_DTS_PATH="board/luckfox-pico/mini/rv1103g-luckfox-pico-mini.dts board/luckfox-pico/mini/rv1103-luckfox-pico-ipc.dtsi"
