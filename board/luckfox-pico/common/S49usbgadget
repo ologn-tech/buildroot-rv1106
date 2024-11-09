@@ -81,13 +81,8 @@ configure_usb_gadget() {
 
 	echo "bringing up usb0"
 	# bring up the usb0 interface
-	ifconfig usb0 192.168.7.2 netmask 255.255.255.0 broadcast 192.168.7.255
+	ifconfig usb0 172.32.0.93 netmask 255.255.0.0 broadcast 172.32.255.255
 	ifconfig usb0 up
-
-	echo "adding routes for usb0"
-	# set routing to use the usb0 interface
-	# route add default via 192.168.7.1 dev usb0
-	ip route add default via 192.168.7.1 dev usb0
 }
 
 case $1 in
