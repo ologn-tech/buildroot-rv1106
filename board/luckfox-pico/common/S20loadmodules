@@ -12,7 +12,8 @@ load_modules() {
 	echo 1 > /sys/module/video_rkisp/parameters/clr_unready_dev
 	modprobe rga3
 	modprobe mpp_vcodec
-	modprobe rockit mcu_fw_path=/lib/firmware/hpmcu_wrap.bin mcu_fw_addr=0xff6ff000 isp_max_h=1296
+	sensor_height=$(cat /proc/rkisp-vir0 | grep -o 'Size:[0-9]*x[0-9]*' | awk -F'x' '{print $2}')
+	modprobe rockit mcu_fw_path=/lib/firmware/hpmcu_wrap.bin mcu_fw_addr=0xff6fe000 isp_max_h=$sensor_height
 }
 
 case $1 in
