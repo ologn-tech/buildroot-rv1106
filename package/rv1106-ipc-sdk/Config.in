@@ -1,0 +1,4 @@
+config BR2_PACKAGE_RV1106_IPC_SDK
+	bool "rv1106-ipc-sdk"
+	help
+	  RV1106 IPC SDK.
