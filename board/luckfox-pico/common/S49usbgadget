@@ -71,7 +71,7 @@ configure_usb_gadget() {
 
 	# kick off the adb daemon in the background, and give it time to initialize
 	echo "starting adb daemon"
-	/usr/bin/adbd &
+	start-stop-daemon --start --quiet --background --exec /usr/bin/adbd
 	sleep 1s
 
 	# attach the created gadget deviec to our UDC driver
