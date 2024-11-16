@@ -1,26 +1,26 @@
 #!/bin/sh
 
 load_modules() {
-	depmod
-	modprobe rk_dvbm
-	modprobe video_rkcif
-	modprobe video_rkisp
-	modprobe phy-rockchip-csi2-dphy-hw
-	modprobe phy-rockchip-csi2-dphy
-	modprobe sc3336
-	echo 1 > /sys/module/video_rkcif/parameters/clr_unready_dev
-	echo 1 > /sys/module/video_rkisp/parameters/clr_unready_dev
-	modprobe rga3
-	modprobe mpp_vcodec
-	sensor_height=$(cat /proc/rkisp-vir0 | grep -o 'Size:[0-9]*x[0-9]*' | awk -F'x' '{print $2}')
-	modprobe rockit mcu_fw_path=/lib/firmware/hpmcu_wrap.bin mcu_fw_addr=0xff6fe000 isp_max_h=$sensor_height
+    depmod
+    modprobe rk_dvbm
+    modprobe video_rkcif
+    modprobe video_rkisp
+    modprobe phy-rockchip-csi2-dphy-hw
+    modprobe phy-rockchip-csi2-dphy
+    modprobe sc3336
+    echo 1 > /sys/module/video_rkcif/parameters/clr_unready_dev
+    echo 1 > /sys/module/video_rkisp/parameters/clr_unready_dev
+    modprobe rga3
+    modprobe mpp_vcodec
+    sensor_height=$(cat /proc/rkisp-vir0 | grep -o 'Size:[0-9]*x[0-9]*' | awk -F'x' '{print $2}')
+    modprobe rockit mcu_fw_path=/lib/firmware/hpmcu_wrap.bin mcu_fw_addr=0xff6fe000 isp_max_h=$sensor_height
 }
 
 case $1 in
 start)
-	load_modules
-	;;
+    load_modules
+    ;;
 *)
-	exit 1
-	;;
+    exit 1
+    ;;
 esac
