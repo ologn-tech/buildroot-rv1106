@@ -62,9 +62,9 @@ config BR2_PACKAGE_OPENCV4_LIB_FLANN
 
 config BR2_PACKAGE_OPENCV4_LIB_HIGHGUI
 	bool "highgui"
-	select BR2_PACKAGE_OPENCV4_LIB_IMGCODECS
+	# select BR2_PACKAGE_OPENCV4_LIB_IMGCODECS
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	select BR2_PACKAGE_OPENCV4_LIB_VIDEOIO
+	# select BR2_PACKAGE_OPENCV4_LIB_VIDEOIO
 	help
 	  Include opencv_highgui (high-level gui and media i/o) module
 	  into the OpenCV build.
@@ -384,6 +384,11 @@ config BR2_PACKAGE_OPENCV4_INSTALL_DATA
 	  lbpcascades features.
 
 	  For further information: see OpenCV documentation.
+
+config BR2_PACKAGE_OPENCV4_WITH_RK
+	bool "rockchip support"
+	help
+	  Enable Rockchip JPEG encoder support.
 
 endif # BR2_PACKAGE_OPENCV4
 
