@@ -33,7 +33,7 @@ config BR2_PACKAGE_OPENCV4_LIB_CALIB3D
 config BR2_PACKAGE_OPENCV4_LIB_DNN
 	bool "dnn"
 	# dnn needs fenv.h which is not provided by uclibc
-	depends on !BR2_TOOLCHAIN_USES_UCLIBC
+	# depends on !BR2_TOOLCHAIN_USES_UCLIBC
 	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS
 	select BR2_PACKAGE_OPENCV4_WITH_PROTOBUF
 	help
@@ -42,7 +42,7 @@ config BR2_PACKAGE_OPENCV4_LIB_DNN
 
 comment "dnn needs a glibc or musl toolchain"
 	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS
-	depends on BR2_TOOLCHAIN_USES_UCLIBC
+	# depends on BR2_TOOLCHAIN_USES_UCLIBC
 
 config BR2_PACKAGE_OPENCV4_LIB_FEATURES2D
 	bool "features2d"
@@ -153,7 +153,7 @@ config BR2_PACKAGE_OPENCV4_LIB_ML
 
 config BR2_PACKAGE_OPENCV4_LIB_OBJDETECT
 	bool "objdetect"
-	depends on !BR2_TOOLCHAIN_USES_UCLIBC # dnn support
+	# depends on !BR2_TOOLCHAIN_USES_UCLIBC # dnn support
 	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS # dnn support
 	# opencv_core dependency is already enabled
 	select BR2_PACKAGE_OPENCV4_LIB_CALIB3D
@@ -166,7 +166,7 @@ config BR2_PACKAGE_OPENCV4_LIB_OBJDETECT
 
 comment "objdetect needs a glibc or musl toolchain"
 	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS
-	depends on BR2_TOOLCHAIN_USES_UCLIBC
+	# depends on BR2_TOOLCHAIN_USES_UCLIBC
 
 config BR2_PACKAGE_OPENCV4_LIB_PHOTO
 	bool "photo"
