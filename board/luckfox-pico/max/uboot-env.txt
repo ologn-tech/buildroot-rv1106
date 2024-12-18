@@ -1,0 +1,6 @@
+active=a
+boot_partname=boot
+mtdparts=spi-nand0:256K(env),256K@256K(idblock),512K(uboot),4M(boot),4M(boot_b),120M(rootfs),120M(rootfs_b),6M(userdata)
+sys_bootargs=ubi.mtd=rootfs root=ubi0:rootfs rootfstype=ubifs rk_dma_heap_cma=24M
+altbootcmd=echo Rollback to previous RootFs; if test ${active} = a; then setenv boot_partname boot_b;  setenv active b; setenv sys_bootargs 'ubi.mtd=rootfs_b root=ubi0:rootfs rootfstype=ubifs rk_dma_heap_cma=24M'; else setenv boot_partname boot; setenv active a; setenv sys_bootargs 'ubi.mtd=rootfs root=ubi0:rootfs rootfstype=ubifs rk_dma_heap_cma=24M'; fi; setenv update failure; saveenv; run bootcmd; 
+update=okay
