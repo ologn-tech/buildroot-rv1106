@@ -48,7 +48,7 @@ config BR2_PACKAGE_OPENCV4_LIB_FEATURES2D
 	bool "features2d"
 	select BR2_PACKAGE_OPENCV4_LIB_FLANN
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	select BR2_PACKAGE_OPENCV4_LIB_ML
+	#select BR2_PACKAGE_OPENCV4_LIB_ML
 	help
 	  Include opencv_features2d (2d features framework) module
 	  into the OpenCV build.
@@ -62,9 +62,9 @@ config BR2_PACKAGE_OPENCV4_LIB_FLANN
 
 config BR2_PACKAGE_OPENCV4_LIB_HIGHGUI
 	bool "highgui"
-	select BR2_PACKAGE_OPENCV4_LIB_IMGCODECS
+	#select BR2_PACKAGE_OPENCV4_LIB_IMGCODECS
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	select BR2_PACKAGE_OPENCV4_LIB_VIDEOIO
+	#select BR2_PACKAGE_OPENCV4_LIB_VIDEOIO
 	help
 	  Include opencv_highgui (high-level gui and media i/o) module
 	  into the OpenCV build.
@@ -159,7 +159,7 @@ config BR2_PACKAGE_OPENCV4_LIB_OBJDETECT
 	select BR2_PACKAGE_OPENCV4_LIB_CALIB3D
 	select BR2_PACKAGE_OPENCV4_LIB_DNN
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	select BR2_PACKAGE_OPENCV4_LIB_ML
+	#select BR2_PACKAGE_OPENCV4_LIB_ML
 	help
 	  Include opencv_objdetect (object detection) module into the
 	  OpenCV build.
