@@ -83,3 +83,8 @@
 &pwm1 {
 	status = "disabled";
 };
+
+/**********WDT**********/
+&wdt {
+	status = "okay";
+};

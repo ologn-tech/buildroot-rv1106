@@ -127,3 +127,8 @@
 &rtc {
 	status = "okay";
 };
+
+/**********WDT**********/
+&wdt {
+	status = "okay";
+};
