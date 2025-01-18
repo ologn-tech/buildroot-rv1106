@@ -1,0 +1,2 @@
+mtdparts=spi-nand0:256K(env),256K@256K(idblock),512K(uboot),4M(boot),120M(rootfs)
+sys_bootargs=ubi.mtd=4 root=ubi0:rootfs rootfstype=ubifs rk_dma_heap_cma=24M
