@@ -341,3 +341,8 @@
 		spi-tx-bus-width = <1>;
 	};
 };
+
+/**********WDT**********/
+&wdt {
+	status = "okay";
+};

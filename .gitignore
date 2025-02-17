@@ -13,3 +13,4 @@
 *.rej
 *~
 *.pyc
+/package/eye-tracker

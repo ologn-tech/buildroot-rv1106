@@ -28,6 +28,11 @@ install -D -m 0644 dl/rv1106-ipc-sdk/git/media/rockit/rockit/lib/lib32/librockit
 
 install -m 0755 $BOARD_DIR/S20loadmodules $TARGET_DIR/etc/init.d/S20loadmodules
 install -m 0755 $BOARD_DIR/S49usbgadget $TARGET_DIR/etc/init.d/S49usbgadget
+install -m 0755 $BOARD_DIR/S50userdatamount $TARGET_DIR/etc/init.d/S50userdatamount
+# install -m 0755 $BOARD_DIR/S99eyetracker $TARGET_DIR/etc/init.d/S99eyetracker
 
 install -m 0644 $BOARD_DIR/dhcpd.conf $TARGET_DIR/etc/dhcp/dhcpd.conf
 install -m 0644 $BOARD_DIR/fw_env.config $TARGET_DIR/etc/fw_env.config
+install -m 0644 $BOARD_DIR/haarcascade_eye.xml $TARGET_DIR/etc/haarcascade_eye.xml
+
+# install -m 0777 $BOARD_DIR/eye_tracker $TARGET_DIR/usr/bin/eye_tracker

@@ -33,7 +33,7 @@ config BR2_PACKAGE_OPENCV4_LIB_CALIB3D
 config BR2_PACKAGE_OPENCV4_LIB_DNN
 	bool "dnn"
 	# dnn needs fenv.h which is not provided by uclibc
-	depends on !BR2_TOOLCHAIN_USES_UCLIBC
+	# depends on !BR2_TOOLCHAIN_USES_UCLIBC
 	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS
 	select BR2_PACKAGE_OPENCV4_WITH_PROTOBUF
 	help
@@ -42,13 +42,13 @@ config BR2_PACKAGE_OPENCV4_LIB_DNN
 
 comment "dnn needs a glibc or musl toolchain"
 	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS
-	depends on BR2_TOOLCHAIN_USES_UCLIBC
+	# depends on BR2_TOOLCHAIN_USES_UCLIBC
 
 config BR2_PACKAGE_OPENCV4_LIB_FEATURES2D
 	bool "features2d"
 	select BR2_PACKAGE_OPENCV4_LIB_FLANN
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	select BR2_PACKAGE_OPENCV4_LIB_ML
+	#select BR2_PACKAGE_OPENCV4_LIB_ML
 	help
 	  Include opencv_features2d (2d features framework) module
 	  into the OpenCV build.
@@ -62,9 +62,9 @@ config BR2_PACKAGE_OPENCV4_LIB_FLANN
 
 config BR2_PACKAGE_OPENCV4_LIB_HIGHGUI
 	bool "highgui"
-	# select BR2_PACKAGE_OPENCV4_LIB_IMGCODECS
+	#select BR2_PACKAGE_OPENCV4_LIB_IMGCODECS
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	# select BR2_PACKAGE_OPENCV4_LIB_VIDEOIO
+	#select BR2_PACKAGE_OPENCV4_LIB_VIDEOIO
 	help
 	  Include opencv_highgui (high-level gui and media i/o) module
 	  into the OpenCV build.
@@ -153,20 +153,20 @@ config BR2_PACKAGE_OPENCV4_LIB_ML
 
 config BR2_PACKAGE_OPENCV4_LIB_OBJDETECT
 	bool "objdetect"
-	depends on !BR2_TOOLCHAIN_USES_UCLIBC # dnn support
+	# depends on !BR2_TOOLCHAIN_USES_UCLIBC # dnn support
 	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS # dnn support
 	# opencv_core dependency is already enabled
 	select BR2_PACKAGE_OPENCV4_LIB_CALIB3D
 	select BR2_PACKAGE_OPENCV4_LIB_DNN
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	select BR2_PACKAGE_OPENCV4_LIB_ML
+	#select BR2_PACKAGE_OPENCV4_LIB_ML
 	help
 	  Include opencv_objdetect (object detection) module into the
 	  OpenCV build.
 
 comment "objdetect needs a glibc or musl toolchain"
 	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS
-	depends on BR2_TOOLCHAIN_USES_UCLIBC
+	# depends on BR2_TOOLCHAIN_USES_UCLIBC
 
 config BR2_PACKAGE_OPENCV4_LIB_PHOTO
 	bool "photo"
@@ -384,11 +384,6 @@ config BR2_PACKAGE_OPENCV4_INSTALL_DATA
 	  lbpcascades features.
 
 	  For further information: see OpenCV documentation.
-
-config BR2_PACKAGE_OPENCV4_WITH_RK
-	bool "rockchip support"
-	help
-	  Enable Rockchip JPEG encoder support.
 
 endif # BR2_PACKAGE_OPENCV4
 

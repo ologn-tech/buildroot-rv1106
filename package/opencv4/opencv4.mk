@@ -4,9 +4,8 @@
 #
 ################################################################################
 
-OPENCV4_VERSION = f9e2b6181ec7578efca73b9e8d8bf582a5bcd3c6
-OPENCV4_SITE = https://github.com/ologn-tech/opencv.git
-OPENCV4_SITE_METHOD = git
+OPENCV4_VERSION = 4.9.0
+OPENCV4_SITE = $(call github,opencv,opencv,$(OPENCV4_VERSION))
 OPENCV4_INSTALL_STAGING = YES
 OPENCV4_LICENSE = Apache-2.0
 OPENCV4_LICENSE_FILES = LICENSE
@@ -59,7 +58,7 @@ OPENCV4_CONF_OPTS += \
 	-DENABLE_PRECOMPILED_HEADERS=OFF \
 	-DENABLE_PROFILING=OFF \
 	-DOPENCV_WARNINGS_ARE_ERRORS=OFF \
-	-DOPENCV_DISABLE_THREAD_SUPPORT=ON
+	-DOPENCV_DISABLE_THREAD_SUPPORT=OFF
 
 # OpenCV link options
 OPENCV4_CONF_OPTS += \

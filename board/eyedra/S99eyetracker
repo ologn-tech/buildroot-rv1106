@@ -1,0 +1,22 @@
+#!/bin/sh
+
+APP_NAME=eye_tracker
+
+case $1 in
+start)
+    # Firmware upgrade successfully, clear the flag
+    fw_setenv upgrade_available 0
+    fw_setenv bootcount 0
+    sync
+    saveenv
+
+    sleep 1
+
+    # Run the app and redirect its output to /var/log/messages using logger
+    $APP_NAME 2>&1 | logger -t $APP_NAME &
+
+    ;;
+*)
+    exit 1
+    ;;
+esac

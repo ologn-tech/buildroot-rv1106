@@ -1,0 +1,30 @@
+From a7cf4f648b7fb029da58388919a33d7ec95185ba Mon Sep 17 00:00:00 2001
+From: Huy Duong <huy.duong@ologn.tech>
+Date: Tue, 26 Nov 2024 11:31:55 +0800
+Subject: [PATCH] dnn: Fix uclibc build
+
+---
+ modules/dnn/src/layers/elementwise_layers.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/modules/dnn/src/layers/elementwise_layers.cpp b/modules/dnn/src/layers/elementwise_layers.cpp
+index 6b7909b1b7..d2d8c44e0f 100644
+--- a/modules/dnn/src/layers/elementwise_layers.cpp
++++ b/modules/dnn/src/layers/elementwise_layers.cpp
+@@ -1536,10 +1536,10 @@ struct RoundFunctor : public BaseDefaultFunctor<RoundFunctor>
+     inline float calculate(float x) const
+     {
+         // Rounds to even numbers in halfway cases, so 2.5 -> 2, -2.5 -> -2
+-        int old_rounding_direction = std::fegetround();
+-        std::fesetround(FE_TONEAREST);
++        // int old_rounding_direction = std::fegetround();
++        // std::fesetround(FE_TONEAREST);
+         float y = std::nearbyint(x);
+-        std::fesetround(old_rounding_direction);
++        // std::fesetround(old_rounding_direction);
+         return y;
+     }
+ 
+-- 
+2.47.0
+
