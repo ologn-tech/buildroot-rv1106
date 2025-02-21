@@ -113,14 +113,6 @@
 		"CISMinFps":	10,
 		"CISFlip":	0
 	},
-	"module_calib":	{
-		"sensor_module":	{
-			"FNumber":	1.6,
-			"EFL":	5.2,
-			"LensT":	90,
-			"IRCutT":	90
-		}
-	},
 	"main_scene":	[{
 			"name":	"normal",
 			"sub_scene":	[{
@@ -128,9 +120,9 @@
 					"scene_isp32":	{
 						"ae_calib":	{
 							"CommCtrl":	{
-								"Enable":	1,
+								"Enable":	0,
 								"AecRunInterval":	0,
-								"AecOpType":	"RK_AIQ_OP_MODE_AUTO",
+								"AecOpType":	"RK_AIQ_OP_MODE_MANUAL",
 								"HistStatsMode":	"CAM_HISTV2_MODE_Y",
 								"RawStatsMode":	"CAM_RAWSTATSV2_MODE_Y",
 								"YRangeMode":	"CAM_YRANGEV2_MODE_FULL",
@@ -426,8 +418,8 @@
 						},
 						"wb_v32":	{
 							"control":	{
-								"byPass":	0,
-								"mode":	"CALIB_WB_MODE_AUTO"
+								"byPass":	1,
+								"mode":	"CALIB_WB_MODE_MANUAL"
 							},
 							"manualPara":	{
 								"mode":	"CALIB_MWB_MODE_WBGAIN",
@@ -1895,7 +1887,7 @@
 						},
 						"cproc":	{
 							"param":	{
-								"enable":	1,
+								"enable":	0,
 								"brightness":	128,
 								"contrast":	128,
 								"saturation":	128,
@@ -1910,7 +1902,7 @@
 						},
 						"colorAsGrey":	{
 							"param":	{
-								"enable":	0,
+								"enable":	1,
 								"skip_frame":	10
 							}
 						},
