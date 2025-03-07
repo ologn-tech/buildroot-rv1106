@@ -31,3 +31,5 @@ install -m 0755 $BOARD_DIR/S49usbgadget $TARGET_DIR/etc/init.d/S49usbgadget
 
 install -m 0644 $BOARD_DIR/dhcpd.conf $TARGET_DIR/etc/dhcp/dhcpd.conf
 install -m 0644 $BOARD_DIR/fw_env.config $TARGET_DIR/etc/fw_env.config
+
+install -m 0644 $BOARD_DIR/ov6211_WS-eye-track-S1-1025_default.json $TARGET_DIR/etc/iqfiles/ov6211_WS-eye-track-S1-1025_default.json
