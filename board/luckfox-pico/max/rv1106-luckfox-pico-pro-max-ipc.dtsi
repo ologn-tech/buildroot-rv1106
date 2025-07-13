@@ -118,24 +118,30 @@
 
 			csi_dphy_input0: endpoint@0 {
 				reg = <0>;
-				remote-endpoint = <&ox03j10_out>;
+				remote-endpoint = <&ox03c10_out>;
 				data-lanes = <1 2>;
 			};
 
 			csi_dphy_input1: endpoint@1 {
 				reg = <1>;
-				remote-endpoint = <&sc4336_out>;
+				remote-endpoint = <&ox03j10_out>;
 				data-lanes = <1 2>;
 			};
 
 			csi_dphy_input2: endpoint@2 {
 				reg = <2>;
-				remote-endpoint = <&sc530ai_out>;
+				remote-endpoint = <&sc4336_out>;
 				data-lanes = <1 2>;
 			};
 
 			csi_dphy_input3: endpoint@3 {
 				reg = <3>;
+				remote-endpoint = <&sc530ai_out>;
+				data-lanes = <1 2>;
+			};
+
+			csi_dphy_input4: endpoint@4 {
+				reg = <4>;
 				remote-endpoint = <&sc3336_out>;
 				data-lanes = <1 2>;
 			};
@@ -175,7 +181,7 @@
 		rockchip,camera-module-lens-name = "30IRC-F16";
 		port {
 			sc3336_out: endpoint {
-				remote-endpoint = <&csi_dphy_input3>;
+				remote-endpoint = <&csi_dphy_input4>;
 				data-lanes = <1 2>;
 			};
 		};
@@ -196,7 +202,7 @@
 		rockchip,camera-module-lens-name = "40IRC_F16";
 		port {
 			sc4336_out: endpoint {
-				remote-endpoint = <&csi_dphy_input1>;
+				remote-endpoint = <&csi_dphy_input2>;
 				data-lanes = <1 2>;
 			};
 		};
@@ -217,7 +223,28 @@
 		rockchip,camera-module-lens-name = "30IRC-F16";
 		port {
 			sc530ai_out: endpoint {
-				remote-endpoint = <&csi_dphy_input2>;
+				remote-endpoint = <&csi_dphy_input3>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+
+	ox03c10: ox03c10@36 {
+		compatible = "ovti,ox03c10";
+		status = "okay";
+		reg = <0x36>;
+		clocks = <&cru MCLK_REF_MIPI0>;
+		clock-names = "xvclk";
+		pwdn-gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&mipi_refclk_out0>;
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "OX03C10";
+		rockchip,camera-module-lens-name = "30IRC-F16";
+		port {
+			ox03c10_out: endpoint {
+				remote-endpoint = <&csi_dphy_input0>;
 				data-lanes = <1 2>;
 			};
 		};
@@ -238,7 +265,7 @@
 		rockchip,camera-module-lens-name = "30IRC-F16";
 		port {
 			ox03j10_out: endpoint {
-				remote-endpoint = <&csi_dphy_input0>;
+				remote-endpoint = <&csi_dphy_input1>;
 				data-lanes = <1 2>;
 			};
 		};
