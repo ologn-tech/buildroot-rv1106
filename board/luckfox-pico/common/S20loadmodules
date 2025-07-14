@@ -7,6 +7,7 @@ load_modules() {
     modprobe video_rkisp
     modprobe phy-rockchip-csi2-dphy-hw
     modprobe phy-rockchip-csi2-dphy
+    modprobe ox03c10
     modprobe sc3336
     echo 1 > /sys/module/video_rkcif/parameters/clr_unready_dev
     echo 1 > /sys/module/video_rkisp/parameters/clr_unready_dev
