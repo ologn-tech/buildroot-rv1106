@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-OPENCV4_VERSION = f9e2b6181ec7578efca73b9e8d8bf582a5bcd3c6
+OPENCV4_VERSION = 6bfb36b0a62760ca9f12d8627fd1f915870c47cd
 OPENCV4_SITE = https://github.com/ologn-tech/opencv.git
 OPENCV4_SITE_METHOD = git
 OPENCV4_INSTALL_STAGING = YES
@@ -406,6 +406,7 @@ ifeq ($(BR2_PACKAGE_OPENCV4_LIB_PYTHON),y)
 OPENCV4_CONF_OPTS += \
 	-DBUILD_opencv_python2=OFF \
 	-DBUILD_opencv_python3=ON \
+	-DOPENCV_SKIP_PYTHON_LOADER=ON \
 	-DPYTHON3_EXECUTABLE=$(HOST_DIR)/bin/python3 \
 	-DPYTHON3_INCLUDE_PATH=$(STAGING_DIR)/usr/include/python$(PYTHON3_VERSION_MAJOR) \
 	-DPYTHON3_LIBRARIES=$(STAGING_DIR)/usr/lib/libpython$(PYTHON3_VERSION_MAJOR).so \
