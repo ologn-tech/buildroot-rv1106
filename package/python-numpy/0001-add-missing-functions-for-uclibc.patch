@@ -1,0 +1,21 @@
+diff --git a/numpy/core/src/npymath/ieee754.c.src b/numpy/core/src/npymath/ieee754.c.src
+index 4e6ddb7..1c8d03d 100644
+--- a/numpy/core/src/npymath/ieee754.c.src
++++ b/numpy/core/src/npymath/ieee754.c.src
+@@ -718,6 +718,16 @@ void npy_set_floatstatus_invalid(void)
+     _npy_floatstatus_x = _npy_floatstatus_inf - NPY_INFINITY;
+ }
+ 
++int npy_clear_floatstatus_barrier(char *param)
++{
++    return 0;
++}
++
++int npy_get_floatstatus_barrier(char *param)
++{
++    return 0;
++}
++
+ /* MS Windows -----------------------------------------------------*/
+ #if defined(_MSC_VER)
+ 
