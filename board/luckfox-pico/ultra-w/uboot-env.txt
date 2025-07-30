@@ -1,0 +1,3 @@
+blkdevparts=mmcblk0:256K(env),256K@256K(idblock),512K(uboot),32M(boot),6G(rootfs)
+sys_bootargs=root=/dev/mmcblk0p5 rootfstype=ext4 rk_dma_heap_cma=66M
+device_name=luckfox-pico-ultra-w
