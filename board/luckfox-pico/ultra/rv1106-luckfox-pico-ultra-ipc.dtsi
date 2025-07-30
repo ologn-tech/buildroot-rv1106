@@ -298,27 +298,6 @@
 		};
 	};
 
-	ox03c10: ox03c10@36 {
-		compatible = "ovti,ox03c10";
-		status = "okay";
-		reg = <0x36>;
-		clocks = <&cru MCLK_REF_MIPI0>;
-		clock-names = "xvclk";
-		reset-gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&mipi_refclk_out0>;
-		rockchip,camera-module-index = <0>;
-		rockchip,camera-module-facing = "back";
-		rockchip,camera-module-name = "OX03C10";
-		rockchip,camera-module-lens-name = "30IRC-F16";
-		port {
-			ox03c10_out: endpoint {
-				remote-endpoint = <&csi_dphy_input2>;
-				data-lanes = <1 2>;
-			};
-		};
-	};
-
 	mis5001: mis5001@31 {
 		compatible = "imagedesign,mis5001";
 		status = "okay";
@@ -335,6 +314,27 @@
 		port {
 			mis5001_out: endpoint {
 				remote-endpoint = <&csi_dphy_input1>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+
+	ox03c10: ox03c10@36 {
+		compatible = "ovti,ox03c10";
+		status = "okay";
+		reg = <0x36>;
+		clocks = <&cru MCLK_REF_MIPI0>;
+		clock-names = "xvclk";
+		reset-gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&mipi_refclk_out0>;
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "OX03C10";
+		rockchip,camera-module-lens-name = "30IRC-F16";
+		port {
+			ox03c10_out: endpoint {
+				remote-endpoint = <&csi_dphy_input2>;
 				data-lanes = <1 2>;
 			};
 		};
