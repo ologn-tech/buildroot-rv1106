@@ -31,5 +31,10 @@ install -D -m 0644 dl/rv1106-ipc-sdk/git/media/rockit/rockit/lib/lib32/librockit
 install -m 0755 $BOARD_DIR/S20loadmodules $TARGET_DIR/etc/init.d/S20loadmodules
 install -m 0755 $BOARD_DIR/S49usbgadget $TARGET_DIR/etc/init.d/S49usbgadget
 
+# Check if e2fsprogs resize2fs is enabled and install S10resize2fs script
+if grep -q "BR2_PACKAGE_E2FSPROGS_RESIZE2FS=y" $BR2_CONFIG; then
+    install -m 0755 $BOARD_DIR/S10resize2fs $TARGET_DIR/etc/init.d/S10resize2fs
+fi
+
 install -m 0644 $BOARD_DIR/dhcpd.conf $TARGET_DIR/etc/dhcp/dhcpd.conf
 install -m 0644 $BOARD_DIR/fw_env.config $TARGET_DIR/etc/fw_env.config
