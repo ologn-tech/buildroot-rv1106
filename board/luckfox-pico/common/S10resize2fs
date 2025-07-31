@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# Resize2fs script to expand root filesystem on first boot
+# This script runs resize2fs on the root partition to use all available space
+
+resize_rootfs() {
+    # Get the root device from kernel command line
+    root_device=$(cat /proc/cmdline | sed 's/.*root=\([^[:space:]]*\).*/\1/')
+    
+    if [ -z "$root_device" ] || [ "$root_device" = "$(cat /proc/cmdline)" ]; then
+        echo "Could not determine root device from /proc/cmdline"
+        return 1
+    fi
+    
+    # Check if resize2fs has already been run by looking for a marker file
+    if [ -f /etc/.resize2fs_done ]; then
+        echo "Resize2fs already completed, skipping"
+        return 0
+    fi
+    
+    echo "Running resize2fs on $root_device"
+    
+    # Run resize2fs to expand the filesystem
+    if resize2fs "$root_device"; then
+        echo "Successfully resized root filesystem"
+        # Create marker file to prevent running again
+        touch /etc/.resize2fs_done
+    else
+        echo "Failed to resize root filesystem"
+        return 1
+    fi
+}
+
+case $1 in
+start)
+    resize_rootfs
+    ;;
+*)
+    exit 1
+    ;;
+esac 
