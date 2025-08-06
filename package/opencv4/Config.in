@@ -48,7 +48,7 @@ config BR2_PACKAGE_OPENCV4_LIB_FEATURES2D
 	bool "features2d"
 	select BR2_PACKAGE_OPENCV4_LIB_FLANN
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	# select BR2_PACKAGE_OPENCV4_LIB_ML
+	select BR2_PACKAGE_OPENCV4_LIB_ML
 	help
 	  Include opencv_features2d (2d features framework) module
 	  into the OpenCV build.
@@ -62,9 +62,9 @@ config BR2_PACKAGE_OPENCV4_LIB_FLANN
 
 config BR2_PACKAGE_OPENCV4_LIB_HIGHGUI
 	bool "highgui"
-	# select BR2_PACKAGE_OPENCV4_LIB_IMGCODECS
+	select BR2_PACKAGE_OPENCV4_LIB_IMGCODECS
 	select BR2_PACKAGE_OPENCV4_LIB_IMGPROC
-	# select BR2_PACKAGE_OPENCV4_LIB_VIDEOIO
+	select BR2_PACKAGE_OPENCV4_LIB_VIDEOIO
 	help
 	  Include opencv_highgui (high-level gui and media i/o) module
 	  into the OpenCV build.
@@ -179,18 +179,18 @@ config BR2_PACKAGE_OPENCV4_LIB_PYTHON
 	bool "python"
 	depends on BR2_PACKAGE_PYTHON3
 	depends on BR2_PACKAGE_PYTHON_NUMPY_ARCH_SUPPORTS
-	# depends on BR2_TOOLCHAIN_USES_GLIBC || BR2_TOOLCHAIN_USES_MUSL # python-numpy
-	# depends on BR2_TOOLCHAIN_GCC_AT_LEAST_9 # python-numpy
+	depends on BR2_TOOLCHAIN_USES_GLIBC || BR2_TOOLCHAIN_USES_MUSL # python-numpy
+	depends on BR2_TOOLCHAIN_GCC_AT_LEAST_9 # python-numpy
 	select BR2_PACKAGE_PYTHON_NUMPY
 	help
 	  Include opencv_python module into the OpenCV build.  No
 	  python example is installed.
 
-# comment "python support needs a glibc or musl toolchain w/ gcc >= 9"
-# 	depends on BR2_PACKAGE_PYTHON3
-# 	depends on BR2_PACKAGE_PYTHON_NUMPY_ARCH_SUPPORTS
-# 	depends on !BR2_TOOLCHAIN_GCC_AT_LEAST_9 ||\
-# 		!(BR2_TOOLCHAIN_USES_GLIBC || BR2_TOOLCHAIN_USES_MUSL)
+comment "python support needs a glibc or musl toolchain w/ gcc >= 9"
+	depends on BR2_PACKAGE_PYTHON3
+	depends on BR2_PACKAGE_PYTHON_NUMPY_ARCH_SUPPORTS
+	depends on !BR2_TOOLCHAIN_GCC_AT_LEAST_9 ||\
+		!(BR2_TOOLCHAIN_USES_GLIBC || BR2_TOOLCHAIN_USES_MUSL)
 
 config BR2_PACKAGE_OPENCV4_LIB_SHAPE
 	bool "shape"
@@ -384,11 +384,6 @@ config BR2_PACKAGE_OPENCV4_INSTALL_DATA
 	  lbpcascades features.
 
 	  For further information: see OpenCV documentation.
-
-config BR2_PACKAGE_OPENCV4_WITH_RK
-	bool "rockchip support"
-	help
-	  Enable Rockchip JPEG encoder support.
 
 endif # BR2_PACKAGE_OPENCV4
 
