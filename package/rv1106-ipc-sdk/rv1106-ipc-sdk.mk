@@ -6,6 +6,6 @@
 
 RV1106_IPC_SDK_SITE = https://github.com/LuckfoxTECH/luckfox-pico.git
 RV1106_IPC_SDK_SITE_METHOD = git
-RV1106_IPC_SDK_VERSION = e1caff31f64cbb1e7dbed793b764bbf1c020d6c7
+RV1106_IPC_SDK_VERSION = e2b0ffa22eb7cf158988d241b967a5583942d2ce
 
 $(eval $(generic-package))
