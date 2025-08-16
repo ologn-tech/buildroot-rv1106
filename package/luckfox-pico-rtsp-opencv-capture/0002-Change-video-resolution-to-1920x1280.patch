@@ -1,0 +1,27 @@
+From 53e714e0a07e64dbdf08e465824abfeb6149d890 Mon Sep 17 00:00:00 2001
+From: Huy Duong <huy.duong@ologn.tech>
+Date: Sat, 16 Aug 2025 18:33:25 +0700
+Subject: [PATCH 2/3] Change video resolution to 1920x1280
+
+---
+ example/luckfox_pico_rtsp_opencv_capture/src/main.cc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/example/luckfox_pico_rtsp_opencv_capture/src/main.cc b/example/luckfox_pico_rtsp_opencv_capture/src/main.cc
+index afb8f3d..5c12853 100644
+--- a/example/luckfox_pico_rtsp_opencv_capture/src/main.cc
++++ b/example/luckfox_pico_rtsp_opencv_capture/src/main.cc
+@@ -25,8 +25,8 @@ int main(int argc, char *argv[]) {
+ 	RK_S32 s32Ret = 0; 
+ 
+ 	int sX,sY,eX,eY;
+-	int width    = 720;
+-    int height   = 480;
++	int width    = 1920;
++    int height   = 1280;
+ 
+ 	char fps_text[16];
+ 	float fps = 0;
+-- 
+2.43.0
+
