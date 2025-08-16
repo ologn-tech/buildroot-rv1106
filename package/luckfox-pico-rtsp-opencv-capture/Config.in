@@ -1,0 +1,10 @@
+config BR2_PACKAGE_LUCKFOX_PICO_RTSP_OPENCV_CAPTURE
+	bool "luckfox-pico-rtsp-opencv-capture"
+	depends on BR2_PACKAGE_OPENCV4
+	depends on BR2_PACKAGE_OPENCV4_LIB_HIGHGUI
+	depends on BR2_PACKAGE_OPENCV4_WITH_RK
+	help
+	  Build RTSP OpenCV capture example for Luckfox Pico.
+
+comment "luckfox-pico-rtsp-opencv-capture needs OpenCV4 with RK support and specific libraries"
+	depends on !BR2_PACKAGE_OPENCV4 || !BR2_PACKAGE_OPENCV4_LIB_HIGHGUI || !BR2_PACKAGE_OPENCV4_WITH_RK
