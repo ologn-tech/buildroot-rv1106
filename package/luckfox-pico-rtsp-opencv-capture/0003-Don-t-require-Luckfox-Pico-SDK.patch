@@ -1,0 +1,43 @@
+From 4fa909be219ff66c32f8420b055b8eef0d8ca24e Mon Sep 17 00:00:00 2001
+From: Huy Duong <huy.duong@ologn.tech>
+Date: Wed, 27 Aug 2025 13:59:28 +0700
+Subject: [PATCH] Don't require Luckfox Pico SDK
+
+---
+ CMakeLists.txt | 20 --------------------
+ 1 file changed, 20 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 90275db..2e8faa5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,26 +8,6 @@ else()
+     return()
+ endif()
+ 
+-set(SDK_PATH $ENV{LUCKFOX_SDK_PATH})
+-set(GLIBC_COMPILER $ENV{GLIBC_COMPILER})
+-if(${LIBC_TYPE} STREQUAL "uclibc")
+-    if (NOT SDK_PATH)
+-        message(WARNING "Please Set Luckfox-pico SDK Path. Such as:export LUCKFOX_SDK_PATH=/home/user/luckfox-pico")
+-        return()
+-    else()
+-        set(CMAKE_C_COMPILER "${SDK_PATH}/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/bin/arm-rockchip830-linux-uclibcgnueabihf-gcc")
+-        set(CMAKE_CXX_COMPILER "${SDK_PATH}/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/bin/arm-rockchip830-linux-uclibcgnueabihf-g++")
+-    endif()
+-elseif(${LIBC_TYPE} STREQUAL "glibc")
+-    if (NOT GLIBC_COMPILER)
+-        message(WARNING "Please Set arm32 glibc compiler Path. Such as:export GLIBC_COMPILER=/opt/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-")
+-        return()
+-    else()
+-        set(CMAKE_C_COMPILER    "${GLIBC_COMPILER}gcc")
+-        set(CMAKE_CXX_COMPILER  "${GLIBC_COMPILER}g++")
+-    endif()
+-endif()
+-
+ if(DEFINED EXAMPLE_DIR)
+     message(STATUS "Selected source directory: ${EXAMPLE_DIR}")
+ else()
+-- 
+2.43.0
+
