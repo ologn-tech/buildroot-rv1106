@@ -60,17 +60,16 @@
 
 	// DHT11
 	dht11_sensor {
-        compatible = "dht11";
-        pinctrl-names = "default";
-        pinctrl-0 = <&gpio1_pc7>;
+		compatible = "dht11";
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio1_pc7>;
 
-        dht11@1 {
-            gpios = <&gpio1 RK_PC7 GPIO_ACTIVE_HIGH>;
-            label = "dht11";
-            linux,default-trigger = "humidity";
-        };
-    };
-
+		dht11@1 {
+		    gpios = <&gpio1 RK_PC7 GPIO_ACTIVE_HIGH>;
+		    label = "dht11";
+		    linux,default-trigger = "humidity";
+		};
+	};
 };
 
 /***************************** AUDIO ********************************/
@@ -425,10 +424,10 @@
 		};
 	};
 
-    gpio1-pc7 {
-        gpio1_pc7:gpio1-pc7 {
-            rockchip,pins = <1 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
-    };
+	gpio1-pc7 {
+		gpio1_pc7: gpio1-pc7 {
+			rockchip,pins = <1 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
 	};
 };
 
