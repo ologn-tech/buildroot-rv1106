@@ -138,6 +138,12 @@
 				remote-endpoint = <&ox03c10_out>;
 				data-lanes = <1 2>;
 			};
+
+			csi_dphy_input4: endpoint@4 {
+				reg = <4>;
+				remote-endpoint = <&ov2312_out>;
+				data-lanes = <1 2>;
+			};
 		};
 
 		port@1 {
@@ -238,6 +244,27 @@
 		port {
 			ox03c10_out: endpoint {
 				remote-endpoint = <&csi_dphy_input3>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+
+	ov2312: ov2312@10 {
+		compatible = "ovti,ov2312";
+		status = "okay";
+		reg = <0x10>;
+		clocks = <&cru MCLK_REF_MIPI0>;
+		clock-names = "xvclk";
+		reset-gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&mipi_refclk_out0>;
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "OV2312";
+		rockchip,camera-module-lens-name = "30IRC-F16";
+		port {
+			ov2312_out: endpoint {
+				remote-endpoint = <&csi_dphy_input4>;
 				data-lanes = <1 2>;
 			};
 		};
