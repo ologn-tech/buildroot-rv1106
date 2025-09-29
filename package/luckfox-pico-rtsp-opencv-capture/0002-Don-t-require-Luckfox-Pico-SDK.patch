@@ -1,7 +1,7 @@
-From 4fa909be219ff66c32f8420b055b8eef0d8ca24e Mon Sep 17 00:00:00 2001
+From a525419e7f452e101da23362e26689e6ebcf6a1a Mon Sep 17 00:00:00 2001
 From: Huy Duong <huy.duong@ologn.tech>
 Date: Wed, 27 Aug 2025 13:59:28 +0700
-Subject: [PATCH] Don't require Luckfox Pico SDK
+Subject: [PATCH 2/4] Don't require Luckfox Pico SDK
 
 ---
  CMakeLists.txt | 20 --------------------

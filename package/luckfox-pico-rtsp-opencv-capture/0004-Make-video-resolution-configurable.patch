@@ -1,0 +1,49 @@
+From 765fe60997fd6ead5ed209d76258159c175c649e Mon Sep 17 00:00:00 2001
+From: Huy Duong <huy.duong@ologn.tech>
+Date: Sat, 16 Aug 2025 18:33:25 +0700
+Subject: [PATCH 4/4] Make video resolution configurable
+
+---
+ CMakeLists.txt                                       | 5 ++++-
+ example/luckfox_pico_rtsp_opencv_capture/src/main.cc | 4 ++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 414670c..69f61e2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,6 +56,9 @@ add_compile_options(-g -Wall
+                     -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 
+                     )
+ 
++# Add WIDTH and HEIGHT as compile definitions for the target
++target_compile_definitions(${PROJECT_NAME} PRIVATE WIDTH=${WIDTH} HEIGHT=${HEIGHT})
++
+ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath-link,${CMAKE_CURRENT_SOURCE_DIR}/lib:/usr/lib")
+ 
+ if(${LIBC_TYPE} STREQUAL "uclibc")
+@@ -118,4 +121,4 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/install/${LIBC_TYPE}/${PRO
+ install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
+ SET(MODEL_DIR "${EXAMPLE_DIR}/model")
+ file(GLOB MODEL_FILES "${MODEL_DIR}/*")  
+-install(FILES ${MODEL_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/model)
+\ No newline at end of file
++install(FILES ${MODEL_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/model)
+diff --git a/example/luckfox_pico_rtsp_opencv_capture/src/main.cc b/example/luckfox_pico_rtsp_opencv_capture/src/main.cc
+index afb8f3d..3d5ec8f 100644
+--- a/example/luckfox_pico_rtsp_opencv_capture/src/main.cc
++++ b/example/luckfox_pico_rtsp_opencv_capture/src/main.cc
+@@ -25,8 +25,8 @@ int main(int argc, char *argv[]) {
+ 	RK_S32 s32Ret = 0; 
+ 
+ 	int sX,sY,eX,eY;
+-	int width    = 720;
+-    int height   = 480;
++	int width    = WIDTH;
++    int height   = HEIGHT;
+ 
+ 	char fps_text[16];
+ 	float fps = 0;
+-- 
+2.43.0
+
