@@ -1,0 +1,17 @@
+config BR2_PACKAGE_LIBMPIX
+	bool "libmpix"
+	help
+	  Library for Microcontroller Pixel processing.
+
+	  libmpix is a C library designed for efficient pixel processing
+	  on microcontrollers. It provides optimized functions for image
+	  manipulation, format conversion, and pixel operations suitable
+	  for embedded systems with limited resources.
+
+	  Features:
+	  - JPEG encoding support
+	  - Media conversion utilities
+	  - Optimized for microcontroller environments
+	  - Low-level API for maximum flexibility
+
+	  https://github.com/libmpix/libmpix
