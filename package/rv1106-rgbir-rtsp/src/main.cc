@@ -123,7 +123,6 @@ int main(int argc, char *argv[])
 	// Allocate enough space for the raw capture data (typically 2 bytes per pixel for 10-bit)
 	uint8_t *buf_in = (uint8_t *)malloc(capture_width * height);
 	uint8_t *buf_in_bggr = (uint8_t *)malloc(capture_width * height);
-	uint8_t *buf_out = (uint8_t *)malloc(width * height * 3);
 
 	char fps_text[16];
 	float fps = 0;
@@ -139,7 +138,6 @@ int main(int argc, char *argv[])
 	// h264_frame
 	VENC_STREAM_S stFrame;
 	stFrame.pstPack = (VENC_PACK_S *)malloc(sizeof(VENC_PACK_S));
-	RK_U64 H264_PTS = 0;
 	RK_U32 H264_TimeRef = 0;
 
 	// Create Pool
@@ -267,10 +265,10 @@ int main(int argc, char *argv[])
 	}
 	printf("V4L2 initialized successfully\n");
 
-	printf("init success\n");
-
-	int frame_count = 0;
 	while (1) {
+		h264_frame.stVFrame.u32TimeRef = H264_TimeRef++;
+		h264_frame.stVFrame.u64PTS = TEST_COMM_GetNowUs();
+
 		v4l2_buffer buf;
 		v4l2_plane planes[VIDEO_MAX_PLANES];
 		memset(&buf, 0, sizeof(buf));
@@ -295,26 +293,11 @@ int main(int argc, char *argv[])
 		}
 		memcpy(buf_in, buffers[buf.index].start, data_size);
 
-		if (frame_count % 30 == 0) {
-			printf("Captured frame %d (%zu bytes)\n", frame_count + 1, data_size);
-		}
-
 		if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) {
 			perror("Requeue Buffer");
 			break;
 		}
 
-		// Save first frame to file for debugging
-		static int first_frame_saved = 0;
-		if (first_frame_saved == 0) {
-			FILE *fp = fopen("first_frame.raw", "wb");
-			if (fp) {
-				fwrite(buf_in, 1, data_size, fp);
-				fclose(fp);
-				printf("Saved first frame to first_frame.raw (%zu bytes)\n", data_size);
-			}
-			first_frame_saved = 1;
-		}
 		build_bggr_from_rgbir4x4(buf_in, buf_in_bggr, capture_width, height);
 
 		// Process image with libmpix
@@ -325,11 +308,8 @@ int main(int argc, char *argv[])
 		mpix_image_crop(&img, 0, 0, width, height);
 		mpix_image_to_buf(&img, data, width * height * 3);
 
-		frame_count++;
-
-		// Set frame metadata
-		h264_frame.stVFrame.u32TimeRef = H264_TimeRef++;
-		h264_frame.stVFrame.u64PTS = TEST_COMM_GetNowUs();
+		sprintf(fps_text, "fps = %.2f", fps);
+		printf("fps = %.2f\n", fps);
 
 		// send stream
 		// encode H264
@@ -343,7 +323,7 @@ int main(int argc, char *argv[])
 				rtsp_tx_video(g_rtsp_session, (uint8_t *)pData, stFrame.pstPack->u32Len, stFrame.pstPack->u64PTS);
 				rtsp_do_event(g_rtsplive);
 			}
-			nowUs = TEST_COMM_GetNowUs();
+			RK_U64 nowUs = TEST_COMM_GetNowUs();
 			fps = (float)1000000 / (float)(nowUs - h264_frame.stVFrame.u64PTS);
 		}
 
@@ -360,7 +340,6 @@ int main(int argc, char *argv[])
 
 	// Free allocated buffers
 	free(buf_in);
-	free(buf_out);
 
 	// Unmap buffers
 	for (int i = 0; i < BUFFER_COUNT; ++i) {
