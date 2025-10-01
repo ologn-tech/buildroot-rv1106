@@ -78,34 +78,77 @@ struct buffer {
 	size_t length;
 };
 
-static void build_bggr_from_rgbir4x4(uint8_t *src, uint8_t *dst, int w, int h)
+static inline void xform4x4_tile(const uint8_t *s0, const uint8_t *s1, const uint8_t *s2, const uint8_t *s3, uint8_t *d0,
+				 uint8_t *d1, uint8_t *d2, uint8_t *d3)
 {
-	for (int y = 0; y < h; ++y) {
-		for (int x = 0; x < w; ++x) {
-			int bx = (x & ~3), by = (y & ~3); // gốc block 4x4
-			int lx = x & 3, ly = y & 3; // local trong block
+	// Load the 4×4 once (t0..t15)
+	uint8_t t0 = s0[0], t1 = s0[1], t2 = s0[2], t3 = s0[3];
+	uint8_t t4 = s1[0], t5 = s1[1], t6 = s1[2], t7 = s1[3];
+	uint8_t t8 = s2[0], t9 = s2[1], t10 = s2[2], t11 = s2[3];
+	uint8_t t12 = s3[0], t13 = s3[1], t14 = s3[2], t15 = s3[3];
 
-			int sx = lx, sy = ly; // mặc định
+	// Mapping derived from your if/else:
+	// [0,1,0,3, 4,2,6,2, 0,9,10,11, 12,2,14,2]
+	d0[0] = t0;
+	d0[1] = t1;
+	d0[2] = t0;
+	d0[3] = t3;
+	d1[0] = t4;
+	d1[1] = t2;
+	d1[2] = t6;
+	d1[3] = t2;
+	d2[0] = t0;
+	d2[1] = t9;
+	d2[2] = t10;
+	d2[3] = t11;
+	d3[0] = t12;
+	d3[1] = t2;
+	d3[2] = t14;
+	d3[3] = t2;
+}
 
-			if ((x & 1) == 1 && (y & 1) == 1) {
-				// RED (odd,odd) → IR thành RED
-				// lấy từ RED cũ (0,2) hoặc (2,0), ví dụ chọn (2,0)
-				sx = 2;
-				sy = 0;
-			} else if ((x & 1) == 0 && (y & 1) == 0) {
-				// BLUE (even,even)
-				if ((lx == 0 && ly == 0) || (lx == 2 && ly == 2)) {
-					// Blue cũ → giữ nguyên
-				} else {
-					// vị trí Red cũ (0,2) hoặc (2,0) → chuyển thành Blue
-					sx = 0;
-					sy = 0; // ví dụ luôn lấy từ Blue (0,0)
-				}
-			} else {
-				// GREEN còn lại → giữ nguyên
-			}
+void build_bggr_from_rgbir4x4(const uint8_t *__restrict src, uint8_t *__restrict dst, int w, int h)
+{
+	// assume w=1792, h=1296, both multiples of 4
+	const int w4 = w; // already 4-aligned
+	const int h4 = h; // already 4-aligned
 
-			dst[y * w + x] = src[(by + sy) * w + (bx + sx)];
+	for (int y = 0; y < h4; y += 4) {
+		const uint8_t *s0 = src + y * w;
+		const uint8_t *s1 = s0 + w;
+		const uint8_t *s2 = s1 + w;
+		const uint8_t *s3 = s2 + w;
+
+		uint8_t *d0 = dst + y * w;
+		uint8_t *d1 = d0 + w;
+		uint8_t *d2 = d1 + w;
+		uint8_t *d3 = d2 + w;
+
+		// prefetch a couple stripes ahead (helps on A7)
+		if (y + 16 < h4) {
+			__builtin_prefetch(src + (y + 16) * w, 0, 1);
+			__builtin_prefetch(dst + (y + 16) * w, 1, 1);
+		}
+
+		// process tiles horizontally; unroll a bit to reduce loop overhead
+		int x = 0;
+		for (; x + 16 <= w4; x += 16) {
+			__builtin_prefetch(s0 + x + 64, 0, 1);
+			__builtin_prefetch(s1 + x + 64, 0, 1);
+			__builtin_prefetch(s2 + x + 64, 0, 1);
+			__builtin_prefetch(s3 + x + 64, 0, 1);
+
+			xform4x4_tile(s0 + x + 0, s1 + x + 0, s2 + x + 0, s3 + x + 0, d0 + x + 0, d1 + x + 0, d2 + x + 0,
+				      d3 + x + 0);
+			xform4x4_tile(s0 + x + 4, s1 + x + 4, s2 + x + 4, s3 + x + 4, d0 + x + 4, d1 + x + 4, d2 + x + 4,
+				      d3 + x + 4);
+			xform4x4_tile(s0 + x + 8, s1 + x + 8, s2 + x + 8, s3 + x + 8, d0 + x + 8, d1 + x + 8, d2 + x + 8,
+				      d3 + x + 8);
+			xform4x4_tile(s0 + x + 12, s1 + x + 12, s2 + x + 12, s3 + x + 12, d0 + x + 12, d1 + x + 12, d2 + x + 12,
+				      d3 + x + 12);
+		}
+		for (; x < w4; x += 4) {
+			xform4x4_tile(s0 + x, s1 + x, s2 + x, s3 + x, d0 + x, d1 + x, d2 + x, d3 + x);
 		}
 	}
 }
