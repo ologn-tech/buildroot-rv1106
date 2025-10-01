@@ -22,20 +22,19 @@
 
 #include <mpix/image.h>
 
-#define DEVICE       "/dev/video0"
+#define DEVICE "/dev/video0"
 #define BUFFER_COUNT 4
 
-#define WIDTH (((VIDEO_WIDTH + 255) / 256) * 256)
-#define HEIGHT VIDEO_HEIGHT
-
-RK_U64 TEST_COMM_GetNowUs() {
-	struct timespec time = {0, 0};
+RK_U64 TEST_COMM_GetNowUs()
+{
+	struct timespec time = { 0, 0 };
 	clock_gettime(CLOCK_MONOTONIC, &time);
 	return (RK_U64)time.tv_sec * 1000000 + (RK_U64)time.tv_nsec / 1000; /* microseconds */
 }
 
-int venc_init(int chnId, int width, int height, RK_CODEC_ID_E enType) {
-	printf("%s\n",__func__);
+int venc_init(int chnId, int width, int height, RK_CODEC_ID_E enType)
+{
+	printf("%s\n", __func__);
 	VENC_RECV_PIC_PARAM_S stRecvParam;
 	VENC_CHN_ATTR_S stAttr;
 	memset(&stAttr, 0, sizeof(VENC_CHN_ATTR_S));
@@ -84,7 +83,7 @@ static void build_bggr_from_rgbir4x4(uint8_t *src, uint8_t *dst, int w, int h)
 	for (int y = 0; y < h; ++y) {
 		for (int x = 0; x < w; ++x) {
 			int bx = (x & ~3), by = (y & ~3); // gốc block 4x4
-			int lx = x & 3, ly = y & 3;       // local trong block
+			int lx = x & 3, ly = y & 3; // local trong block
 
 			int sx = lx, sy = ly; // mặc định
 
@@ -118,11 +117,13 @@ int main(int argc, char *argv[])
 	int width = WIDTH;
 	int height = HEIGHT;
 
+	int capture_width = ((width + 255) / 256) * 256;
+
 	// SBGGR10 format: 10 bits per pixel, but we need to handle it as raw data
 	// Allocate enough space for the raw capture data (typically 2 bytes per pixel for 10-bit)
-	uint8_t *buf_in = (uint8_t *)malloc(height * width);
-	uint8_t *buf_in_bggr = (uint8_t *)malloc(height * width);
-	uint8_t *buf_out = (uint8_t *)malloc(height * width * 3);
+	uint8_t *buf_in = (uint8_t *)malloc(capture_width * height);
+	uint8_t *buf_in_bggr = (uint8_t *)malloc(capture_width * height);
+	uint8_t *buf_out = (uint8_t *)malloc(width * height * 3);
 
 	char fps_text[16];
 	float fps = 0;
@@ -186,7 +187,7 @@ int main(int argc, char *argv[])
 	v4l2_format fmt;
 	memset(&fmt, 0, sizeof(fmt));
 	fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
-	fmt.fmt.pix_mp.width = width;
+	fmt.fmt.pix_mp.width = capture_width;
 	fmt.fmt.pix_mp.height = height;
 	fmt.fmt.pix_mp.pixelformat = V4L2_PIX_FMT_SBGGR8;
 	fmt.fmt.pix_mp.field = V4L2_FIELD_ANY;
@@ -198,8 +199,8 @@ int main(int argc, char *argv[])
 	}
 
 	// Print actual format details
-	printf("Actual format: %dx%d, pixelformat: %.4s\n", fmt.fmt.pix_mp.width,
-	       fmt.fmt.pix_mp.height, (char *)&fmt.fmt.pix_mp.pixelformat);
+	printf("Actual format: %dx%d, pixelformat: %.4s\n", fmt.fmt.pix_mp.width, fmt.fmt.pix_mp.height,
+	       (char *)&fmt.fmt.pix_mp.pixelformat);
 
 	// Request buffers
 	v4l2_requestbuffers req;
@@ -231,8 +232,7 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 		buffers[i].length = planes[0].length;
-		buffers[i].start = mmap(NULL, planes[0].length, PROT_READ | PROT_WRITE, MAP_SHARED,
-					fd, planes[0].m.mem_offset);
+		buffers[i].start = mmap(NULL, planes[0].length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, planes[0].m.mem_offset);
 		if (buffers[i].start == MAP_FAILED) {
 			perror("mmap");
 			close(fd);
@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
 		// Note: SBGGR10 format has 10 bits per pixel, but we need to handle it properly
 		// For now, we'll copy the raw data and let libmpix handle the format conversion
 		size_t data_size = planes[0].bytesused;
-		size_t max_size = width * height; // Maximum expected size for 10-bit data
+		size_t max_size = capture_width * height;
 		if (data_size > max_size) {
 			data_size = max_size; // Limit to expected size
 		}
@@ -311,18 +311,18 @@ int main(int argc, char *argv[])
 			if (fp) {
 				fwrite(buf_in, 1, data_size, fp);
 				fclose(fp);
-				printf("Saved first frame to first_frame.raw (%zu bytes)\n",
-				       data_size);
+				printf("Saved first frame to first_frame.raw (%zu bytes)\n", data_size);
 			}
 			first_frame_saved = 1;
 		}
-		build_bggr_from_rgbir4x4(buf_in, buf_in_bggr, width, height);
+		build_bggr_from_rgbir4x4(buf_in, buf_in_bggr, capture_width, height);
 
 		// Process image with libmpix
 		struct mpix_image img;
-		struct mpix_format fmt = { .fourcc = MPIX_FMT_SBGGR8, .width = width, .height = height };
-		mpix_image_from_buf(&img, buf_in_bggr, width * height, &fmt);
+		struct mpix_format fmt = { .fourcc = MPIX_FMT_SBGGR8, .width = capture_width, .height = height };
+		mpix_image_from_buf(&img, buf_in_bggr, capture_width * height, &fmt);
 		mpix_image_debayer(&img, 2);
+		mpix_image_crop(&img, 0, 0, width, height);
 		mpix_image_to_buf(&img, data, width * height * 3);
 
 		frame_count++;
@@ -340,8 +340,7 @@ int main(int argc, char *argv[])
 		if (s32Ret == RK_SUCCESS) {
 			if (g_rtsplive && g_rtsp_session) {
 				void *pData = RK_MPI_MB_Handle2VirAddr(stFrame.pstPack->pMbBlk);
-				rtsp_tx_video(g_rtsp_session, (uint8_t *)pData,
-					      stFrame.pstPack->u32Len, stFrame.pstPack->u64PTS);
+				rtsp_tx_video(g_rtsp_session, (uint8_t *)pData, stFrame.pstPack->u32Len, stFrame.pstPack->u64PTS);
 				rtsp_do_event(g_rtsplive);
 			}
 			nowUs = TEST_COMM_GetNowUs();
