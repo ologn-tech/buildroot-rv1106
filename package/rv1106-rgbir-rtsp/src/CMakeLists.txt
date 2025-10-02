@@ -2,9 +2,9 @@
 
 cmake_minimum_required(VERSION 3.20)
 
-project(rv1106-rgbir-rtsp LANGUAGES C CXX)
+project(rv1106-rgbir-rtsp LANGUAGES C)
 
-add_executable(rv1106-rgbir-rtsp main.cc)
+add_executable(rv1106-rgbir-rtsp main.c)
 
 # Add NEON optimization flags for Cortex-A7
 target_compile_options(rv1106-rgbir-rtsp PRIVATE

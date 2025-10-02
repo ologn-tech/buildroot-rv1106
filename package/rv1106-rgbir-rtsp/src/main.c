@@ -35,7 +35,7 @@ struct buffer {
 	size_t length;
 };
 
-inline void xform4x4_tile(const uint8_t *s0, const uint8_t *s1, const uint8_t *s2, const uint8_t *s3, uint8_t *d0, uint8_t *d1,
+static inline void xform4x4_tile(const uint8_t *s0, const uint8_t *s1, const uint8_t *s2, const uint8_t *s3, uint8_t *d0, uint8_t *d1,
 			  uint8_t *d2, uint8_t *d3)
 {
 	// Load the 4×4 once (t0..t15)
@@ -64,7 +64,7 @@ inline void xform4x4_tile(const uint8_t *s0, const uint8_t *s1, const uint8_t *s
 	d3[3] = t2;
 }
 
-inline void rgbir_to_bggr(uint8_t *dst, uint8_t *src, int w, int h)
+static inline void rgbir_to_bggr(uint8_t *dst, uint8_t *src, int w, int h)
 {
 	// assume w=1792, h=1296, both multiples of 4
 	const int w4 = w; // already 4-aligned
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Set format
-	v4l2_format fmt;
+	struct v4l2_format fmt;
 	memset(&fmt, 0, sizeof(fmt));
 	fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
 	fmt.fmt.pix_mp.width = width;
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
 	       (char *)&fmt.fmt.pix_mp.pixelformat);
 
 	// Request buffers
-	v4l2_requestbuffers req;
+	struct v4l2_requestbuffers req;
 	memset(&req, 0, sizeof(req));
 	req.count = BUFFER_COUNT;
 	req.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
@@ -225,10 +225,10 @@ int main(int argc, char *argv[])
 	}
 
 	// Map buffers
-	buffer buffers[BUFFER_COUNT];
+	struct buffer buffers[BUFFER_COUNT];
 	for (int i = 0; i < BUFFER_COUNT; ++i) {
-		v4l2_buffer buf;
-		v4l2_plane planes[VIDEO_MAX_PLANES];
+		struct v4l2_buffer buf;
+		struct v4l2_plane planes[VIDEO_MAX_PLANES];
 		memset(&buf, 0, sizeof(buf));
 		memset(planes, 0, sizeof(planes));
 		buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
@@ -252,8 +252,8 @@ int main(int argc, char *argv[])
 
 	// Queue buffers
 	for (int i = 0; i < BUFFER_COUNT; ++i) {
-		v4l2_buffer buf;
-		v4l2_plane planes[VIDEO_MAX_PLANES];
+		struct v4l2_buffer buf;
+		struct v4l2_plane planes[VIDEO_MAX_PLANES];
 		memset(&buf, 0, sizeof(buf));
 		memset(planes, 0, sizeof(planes));
 		buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
@@ -269,7 +269,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Start streaming
-	v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+	enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
 	if (ioctl(fd, VIDIOC_STREAMON, &type) < 0) {
 		perror("Start Capture");
 		close(fd);
@@ -281,8 +281,8 @@ int main(int argc, char *argv[])
 		h264_frame.stVFrame.u32TimeRef = H264_TimeRef++;
 		h264_frame.stVFrame.u64PTS = TEST_COMM_GetNowUs();
 
-		v4l2_buffer buf;
-		v4l2_plane planes[VIDEO_MAX_PLANES];
+		struct v4l2_buffer buf;
+		struct v4l2_plane planes[VIDEO_MAX_PLANES];
 		memset(&buf, 0, sizeof(buf));
 		memset(planes, 0, sizeof(planes));
 		buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
