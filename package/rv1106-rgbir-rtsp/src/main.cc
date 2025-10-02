@@ -1,27 +1,25 @@
-#include <assert.h>
 #include <fcntl.h>
-#include <getopt.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/poll.h>
+#include <linux/videodev2.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
-#include <linux/videodev2.h>
 #include <time.h>
 #include <unistd.h>
+
+#ifdef __ARM_NEON
+#include <arm_neon.h>
+#endif
 
 #include <rk_mpi_mb.h>
 #include <rk_mpi_venc.h>
 #include <rk_mpi_vi.h>
 #include <rk_mpi_vpss.h>
 #include <rk_mpi_sys.h>
-#include "rtsp_demo.h"
+#include <rtsp_demo.h>
 
 #include <mpix/image.h>
 
+#define WIDTH 1536
+#define HEIGHT 1296
 #define DEVICE "/dev/video0"
 #define BUFFER_COUNT 4
 
@@ -32,54 +30,13 @@ RK_U64 TEST_COMM_GetNowUs()
 	return (RK_U64)time.tv_sec * 1000000 + (RK_U64)time.tv_nsec / 1000; /* microseconds */
 }
 
-int venc_init(int chnId, int width, int height, RK_CODEC_ID_E enType)
-{
-	printf("%s\n", __func__);
-	VENC_RECV_PIC_PARAM_S stRecvParam;
-	VENC_CHN_ATTR_S stAttr;
-	memset(&stAttr, 0, sizeof(VENC_CHN_ATTR_S));
-
-	if (enType == RK_VIDEO_ID_AVC) {
-		stAttr.stRcAttr.enRcMode = VENC_RC_MODE_H264CBR;
-		stAttr.stRcAttr.stH264Cbr.u32BitRate = 10 * 1024;
-		stAttr.stRcAttr.stH264Cbr.u32Gop = 1;
-	} else if (enType == RK_VIDEO_ID_HEVC) {
-		stAttr.stRcAttr.enRcMode = VENC_RC_MODE_H265CBR;
-		stAttr.stRcAttr.stH265Cbr.u32BitRate = 10 * 1024;
-		stAttr.stRcAttr.stH265Cbr.u32Gop = 60;
-	} else if (enType == RK_VIDEO_ID_MJPEG) {
-		stAttr.stRcAttr.enRcMode = VENC_RC_MODE_MJPEGCBR;
-		stAttr.stRcAttr.stMjpegCbr.u32BitRate = 10 * 1024;
-	}
-
-	stAttr.stVencAttr.enType = enType;
-	stAttr.stVencAttr.enPixelFormat = RK_FMT_RGB888;
-	if (enType == RK_VIDEO_ID_AVC)
-		stAttr.stVencAttr.u32Profile = H264E_PROFILE_HIGH;
-	stAttr.stVencAttr.u32PicWidth = width;
-	stAttr.stVencAttr.u32PicHeight = height;
-	stAttr.stVencAttr.u32VirWidth = width;
-	stAttr.stVencAttr.u32VirHeight = height;
-	stAttr.stVencAttr.u32StreamBufCnt = 2;
-	stAttr.stVencAttr.u32BufSize = width * height * 3 / 2;
-	stAttr.stVencAttr.enMirror = MIRROR_NONE;
-
-	RK_MPI_VENC_CreateChn(chnId, &stAttr);
-
-	memset(&stRecvParam, 0, sizeof(VENC_RECV_PIC_PARAM_S));
-	stRecvParam.s32RecvPicNum = -1;
-	RK_MPI_VENC_StartRecvFrame(chnId, &stRecvParam);
-
-	return 0;
-}
-
 struct buffer {
 	void *start;
 	size_t length;
 };
 
-static inline void xform4x4_tile(const uint8_t *s0, const uint8_t *s1, const uint8_t *s2, const uint8_t *s3, uint8_t *d0,
-				 uint8_t *d1, uint8_t *d2, uint8_t *d3)
+inline void xform4x4_tile(const uint8_t *s0, const uint8_t *s1, const uint8_t *s2, const uint8_t *s3, uint8_t *d0, uint8_t *d1,
+			  uint8_t *d2, uint8_t *d3)
 {
 	// Load the 4×4 once (t0..t15)
 	uint8_t t0 = s0[0], t1 = s0[1], t2 = s0[2], t3 = s0[3];
@@ -107,7 +64,7 @@ static inline void xform4x4_tile(const uint8_t *s0, const uint8_t *s1, const uin
 	d3[3] = t2;
 }
 
-void build_bggr_from_rgbir4x4(const uint8_t *__restrict src, uint8_t *__restrict dst, int w, int h)
+inline void rgbir_to_bggr(uint8_t *dst, uint8_t *src, int w, int h)
 {
 	// assume w=1792, h=1296, both multiples of 4
 	const int w4 = w; // already 4-aligned
@@ -160,17 +117,12 @@ int main(int argc, char *argv[])
 	int width = WIDTH;
 	int height = HEIGHT;
 
-	int capture_width = ((width + 255) / 256) * 256;
-
-	// SBGGR10 format: 10 bits per pixel, but we need to handle it as raw data
-	// Allocate enough space for the raw capture data (typically 2 bytes per pixel for 10-bit)
-	uint8_t *buf_in = (uint8_t *)malloc(capture_width * height);
-	uint8_t *buf_in_bggr = (uint8_t *)malloc(capture_width * height);
+	uint8_t *buf_in = (uint8_t *)malloc(width * height);
+	uint8_t *buf_in_bggr = (uint8_t *)malloc(width * height);
 
 	char fps_text[16];
 	float fps = 0;
 	memset(fps_text, 0, 16);
-	RK_U64 nowUs;
 
 	// rkmpi init
 	if (RK_MPI_SYS_Init() != RK_SUCCESS) {
@@ -195,7 +147,7 @@ int main(int argc, char *argv[])
 	// Get MB from Pool
 	MB_BLK src_Blk = RK_MPI_MB_GetMB(src_Pool, width * height * 3, RK_TRUE);
 
-	// Build h264_frame
+	// Build H264 frame
 	VIDEO_FRAME_INFO_S h264_frame;
 	h264_frame.stVFrame.u32Width = width;
 	h264_frame.stVFrame.u32Height = height;
@@ -206,7 +158,7 @@ int main(int argc, char *argv[])
 	h264_frame.stVFrame.pMbBlk = src_Blk;
 	unsigned char *data = (unsigned char *)RK_MPI_MB_Handle2VirAddr(src_Blk);
 
-	// rtsp init
+	// RTSP init
 	rtsp_demo_handle g_rtsplive = NULL;
 	rtsp_session_handle g_rtsp_session;
 	g_rtsplive = create_rtsp_demo(554);
@@ -214,9 +166,26 @@ int main(int argc, char *argv[])
 	rtsp_set_video(g_rtsp_session, RTSP_CODEC_ID_VIDEO_H265, NULL, 0);
 	rtsp_sync_video_ts(g_rtsp_session, rtsp_get_reltime(), rtsp_get_ntptime());
 
-	// venc init
-	RK_CODEC_ID_E enCodecType = RK_VIDEO_ID_HEVC;
-	venc_init(0, width, height, enCodecType);
+	// VENC init
+	VENC_RECV_PIC_PARAM_S stRecvParam;
+	VENC_CHN_ATTR_S stAttr;
+	memset(&stAttr, 0, sizeof(VENC_CHN_ATTR_S));
+	stAttr.stRcAttr.enRcMode = VENC_RC_MODE_H265CBR;
+	stAttr.stRcAttr.stH265Cbr.u32BitRate = 10 * 1024;
+	stAttr.stRcAttr.stH265Cbr.u32Gop = 60;
+	stAttr.stVencAttr.enType = RK_VIDEO_ID_HEVC;
+	stAttr.stVencAttr.enPixelFormat = RK_FMT_RGB888;
+	stAttr.stVencAttr.u32PicWidth = width;
+	stAttr.stVencAttr.u32PicHeight = height;
+	stAttr.stVencAttr.u32VirWidth = width;
+	stAttr.stVencAttr.u32VirHeight = height;
+	stAttr.stVencAttr.u32StreamBufCnt = 2;
+	stAttr.stVencAttr.u32BufSize = width * height * 3 / 2;
+	stAttr.stVencAttr.enMirror = MIRROR_NONE;
+	RK_MPI_VENC_CreateChn(0, &stAttr);
+	memset(&stRecvParam, 0, sizeof(VENC_RECV_PIC_PARAM_S));
+	stRecvParam.s32RecvPicNum = -1;
+	RK_MPI_VENC_StartRecvFrame(0, &stRecvParam);
 
 	int fd = open(DEVICE, O_RDWR);
 	if (fd < 0) {
@@ -228,7 +197,7 @@ int main(int argc, char *argv[])
 	v4l2_format fmt;
 	memset(&fmt, 0, sizeof(fmt));
 	fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
-	fmt.fmt.pix_mp.width = capture_width;
+	fmt.fmt.pix_mp.width = width;
 	fmt.fmt.pix_mp.height = height;
 	fmt.fmt.pix_mp.pixelformat = V4L2_PIX_FMT_SBGGR8;
 	fmt.fmt.pix_mp.field = V4L2_FIELD_ANY;
@@ -326,11 +295,8 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		// Copy raw BG10 data to processing buffer
-		// Note: SBGGR10 format has 10 bits per pixel, but we need to handle it properly
-		// For now, we'll copy the raw data and let libmpix handle the format conversion
 		size_t data_size = planes[0].bytesused;
-		size_t max_size = capture_width * height;
+		size_t max_size = width * height;
 		if (data_size > max_size) {
 			data_size = max_size; // Limit to expected size
 		}
@@ -341,14 +307,12 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		build_bggr_from_rgbir4x4(buf_in, buf_in_bggr, capture_width, height);
+		rgbir_to_bggr(buf_in_bggr, buf_in, width, height);
 
-		// Process image with libmpix
 		struct mpix_image img;
-		struct mpix_format fmt = { .fourcc = MPIX_FMT_SBGGR8, .width = capture_width, .height = height };
-		mpix_image_from_buf(&img, buf_in_bggr, capture_width * height, &fmt);
+		struct mpix_format fmt = { .fourcc = MPIX_FMT_SBGGR8, .width = width, .height = height };
+		mpix_image_from_buf(&img, buf_in_bggr, width * height, &fmt);
 		mpix_image_debayer(&img, 2);
-		mpix_image_crop(&img, 0, 0, width, height);
 		mpix_image_to_buf(&img, data, width * height * 3);
 
 		sprintf(fps_text, "fps = %.2f", fps);

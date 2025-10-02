@@ -6,6 +6,17 @@ project(rv1106-rgbir-rtsp LANGUAGES C CXX)
 
 add_executable(rv1106-rgbir-rtsp main.cc)
 
+# Add NEON optimization flags for Cortex-A7
+target_compile_options(rv1106-rgbir-rtsp PRIVATE
+    -mcpu=cortex-a7
+    -mfpu=neon-vfpv4
+    -mfloat-abi=hard
+    -O3
+    -ffast-math
+    -ftree-vectorize
+    -funsafe-math-optimizations
+)
+
 add_subdirectory(${LIBMPIX_DIR}/ports/posix libmpix)
 libmpix_init(rv1106-rgbir-rtsp)
 

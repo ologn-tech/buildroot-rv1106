@@ -9,19 +9,3 @@ config BR2_PACKAGE_RV1106_RGBIR_RTSP
 	  Build RGB-IR RTSP streaming application for RV1106.
 	  This package provides RTSP streaming capabilities for RGB-IR cameras
 	  on the RV1106 platform.
-
-if BR2_PACKAGE_RV1106_RGBIR_RTSP
-
-config BR2_PACKAGE_RV1106_RGBIR_RTSP_WIDTH
-	int "Video width"
-	default 1600
-	help
-	  Width of the RGB-IR video capture in pixels.
-
-config BR2_PACKAGE_RV1106_RGBIR_RTSP_HEIGHT
-	int "Video height"
-	default 1296
-	help
-	  Height of the RGB-IR video capture in pixels.
-
-endif
