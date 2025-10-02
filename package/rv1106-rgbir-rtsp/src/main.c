@@ -313,6 +313,9 @@ int main(int argc, char *argv[])
 		struct mpix_format fmt = { .fourcc = MPIX_FMT_SBGGR8, .width = width, .height = height };
 		mpix_image_from_buf(&img, buf_in_bggr, width * height, &fmt);
 		mpix_image_debayer(&img, 2);
+		mpix_image_correct_white_balance(&img);
+		mpix_image_ctrl_value(&img, MPIX_CID_RED_BALANCE, 1.2 * (1 << 10));
+		mpix_image_ctrl_value(&img, MPIX_CID_BLUE_BALANCE, 1.55 * (1 << 10));
 		mpix_image_to_buf(&img, data, width * height * 3);
 
 		sprintf(fps_text, "fps = %.2f", fps);
