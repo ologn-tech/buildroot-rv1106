@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBMPIX_VERSION = 98a8fcc0918166aa489377c5ce06d3199de17a24
+LIBMPIX_VERSION = ed6214ad3d2ccf058812d3b3a614b937a7fe582e
 LIBMPIX_SITE = https://github.com/libmpix/libmpix
 LIBMPIX_SITE_METHOD = git
 LIBMPIX_LICENSE = Apache-2.0
