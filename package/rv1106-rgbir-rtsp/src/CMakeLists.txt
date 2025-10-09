@@ -62,7 +62,7 @@ target_include_directories(
   rv1106-rgbir-rtsp
   PRIVATE
   ${OpenCV_INCLUDE_DIRS}
-	${RV1106_IPC_SDK_DIR}/media/common_algorithm/common_algorithm/misc/include
+  ${RV1106_IPC_SDK_DIR}/media/common_algorithm/common_algorithm/misc/include
   ${RV1106_IPC_SDK_DIR}/media/rockit/rockit/mpi/sdk/include
 )
 
@@ -77,6 +77,4 @@ target_link_libraries(
   ${RTSP}
 )
 
-install(TARGETS rv1106-rgbir-rtsp
-        RUNTIME DESTINATION bin
-)
+install(TARGETS rv1106-rgbir-rtsp RUNTIME DESTINATION bin)

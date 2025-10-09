@@ -23,106 +23,95 @@
 #define DEVICE "/dev/video0"
 #define BUFFER_COUNT 1
 
-RK_U64 TEST_COMM_GetNowUs()
+struct buffer {
+	void *start;
+	size_t length;
+};
+
+static void xioctl(int fh, int request, void *arg)
+{
+	int r;
+
+	do {
+		r = ioctl(fh, request, arg);
+	} while (r == -1 && ((errno == EINTR) || (errno == EAGAIN)));
+
+	if (r == -1) {
+		fprintf(stderr, "error %d, %s\n", errno, strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+}
+
+RK_U64 get_now_us(void)
 {
 	struct timespec time = { 0, 0 };
 	clock_gettime(CLOCK_MONOTONIC, &time);
 	return (RK_U64)time.tv_sec * 1000000 + (RK_U64)time.tv_nsec / 1000; /* microseconds */
 }
 
-struct buffer {
-	void *start;
-	size_t length;
-};
-
-static inline void xform4x4_tile(const uint8_t *s0, const uint8_t *s1, const uint8_t *s2, const uint8_t *s3, uint8_t *d0, uint8_t *d1,
-			  uint8_t *d2, uint8_t *d3)
+/*
+	Input			Output
+	B   G   R   G		B   G   B   G
+	G  IR   G  IR		G   R   G   R
+	R   G   B   G		B   G   B   G
+	G  IR   G  IR		G   R   G   R
+*/
+static inline void xform4x4_tile(uint8_t *s0, uint8_t *s1, uint8_t *s2, uint8_t *s3, uint8_t *d0, uint8_t *d1, uint8_t *d2,
+				 uint8_t *d3)
 {
-	// Load the 4×4 once (t0..t15)
-	uint8_t t0 = s0[0], t1 = s0[1], t2 = s0[2], t3 = s0[3];
-	uint8_t t4 = s1[0], t5 = s1[1], t6 = s1[2], t7 = s1[3];
-	uint8_t t8 = s2[0], t9 = s2[1], t10 = s2[2], t11 = s2[3];
+	uint8_t t00 = s0[0], t01 = s0[1], t02 = s0[2], t03 = s0[3];
+	uint8_t t04 = s1[0], t05 = s1[1], t06 = s1[2], t07 = s1[3];
+	uint8_t t08 = s2[0], t09 = s2[1], t10 = s2[2], t11 = s2[3];
 	uint8_t t12 = s3[0], t13 = s3[1], t14 = s3[2], t15 = s3[3];
 
-	// Mapping derived from your if/else:
-	// [0,1,0,3, 4,2,6,2, 0,9,10,11, 12,2,14,2]
-	d0[0] = t0;
-	d0[1] = t1;
-	d0[2] = t0;
-	d0[3] = t3;
-	d1[0] = t4;
-	d1[1] = t2;
-	d1[2] = t6;
-	d1[3] = t2;
-	d2[0] = t0;
-	d2[1] = t9;
+	(void)t05;
+	(void)t07;
+	(void)t13;
+	(void)t15;
+
+	d0[0] = t00;
+	d0[1] = t01;
+	d0[2] = t00;
+	d0[3] = t03;
+	d1[0] = t04;
+	d1[1] = t02;
+	d1[2] = t06;
+	d1[3] = t02;
+	d2[0] = t00;
+	d2[1] = t09;
 	d2[2] = t10;
 	d2[3] = t11;
 	d3[0] = t12;
-	d3[1] = t2;
+	d3[1] = t08;
 	d3[2] = t14;
-	d3[3] = t2;
+	d3[3] = t08;
 }
 
-static inline void rgbir_to_bggr(uint8_t *dst, uint8_t *src, int w, int h)
+static inline void rgbir_to_bggr(uint8_t *src, uint8_t *dst, int width, int height)
 {
-	// assume w=1792, h=1296, both multiples of 4
-	const int w4 = w; // already 4-aligned
-	const int h4 = h; // already 4-aligned
+	for (int y = 0; y < height; y += 4) {
+		uint8_t *s0 = src + y * width;
+		uint8_t *s1 = s0 + width;
+		uint8_t *s2 = s1 + width;
+		uint8_t *s3 = s2 + width;
 
-	for (int y = 0; y < h4; y += 4) {
-		const uint8_t *s0 = src + y * w;
-		const uint8_t *s1 = s0 + w;
-		const uint8_t *s2 = s1 + w;
-		const uint8_t *s3 = s2 + w;
+		uint8_t *d0 = dst + y * width;
+		uint8_t *d1 = d0 + width;
+		uint8_t *d2 = d1 + width;
+		uint8_t *d3 = d2 + width;
 
-		uint8_t *d0 = dst + y * w;
-		uint8_t *d1 = d0 + w;
-		uint8_t *d2 = d1 + w;
-		uint8_t *d3 = d2 + w;
-
-		// prefetch a couple stripes ahead (helps on A7)
-		if (y + 16 < h4) {
-			__builtin_prefetch(src + (y + 16) * w, 0, 1);
-			__builtin_prefetch(dst + (y + 16) * w, 1, 1);
-		}
-
-		// process tiles horizontally; unroll a bit to reduce loop overhead
-		int x = 0;
-		for (; x + 16 <= w4; x += 16) {
-			__builtin_prefetch(s0 + x + 64, 0, 1);
-			__builtin_prefetch(s1 + x + 64, 0, 1);
-			__builtin_prefetch(s2 + x + 64, 0, 1);
-			__builtin_prefetch(s3 + x + 64, 0, 1);
-
-			xform4x4_tile(s0 + x + 0, s1 + x + 0, s2 + x + 0, s3 + x + 0, d0 + x + 0, d1 + x + 0, d2 + x + 0,
-				      d3 + x + 0);
-			xform4x4_tile(s0 + x + 4, s1 + x + 4, s2 + x + 4, s3 + x + 4, d0 + x + 4, d1 + x + 4, d2 + x + 4,
-				      d3 + x + 4);
-			xform4x4_tile(s0 + x + 8, s1 + x + 8, s2 + x + 8, s3 + x + 8, d0 + x + 8, d1 + x + 8, d2 + x + 8,
-				      d3 + x + 8);
-			xform4x4_tile(s0 + x + 12, s1 + x + 12, s2 + x + 12, s3 + x + 12, d0 + x + 12, d1 + x + 12, d2 + x + 12,
-				      d3 + x + 12);
-		}
-		for (; x < w4; x += 4) {
+		for (int x = 0; x < width; x += 4) {
 			xform4x4_tile(s0 + x, s1 + x, s2 + x, s3 + x, d0 + x, d1 + x, d2 + x, d3 + x);
 		}
 	}
 }
 
-int main(int argc, char *argv[])
+int main(void)
 {
-	RK_S32 s32Ret = 0;
-
 	int width = WIDTH;
 	int height = HEIGHT;
 
-	uint8_t *buf_in = (uint8_t *)malloc(width * height);
-	uint8_t *buf_in_bggr = (uint8_t *)malloc(width * height);
-
-	char fps_text[16];
-	float fps = 0;
-	memset(fps_text, 0, 16);
+	uint8_t *buffer = (uint8_t *)malloc(width * height);
 
 	// rkmpi init
 	if (RK_MPI_SYS_Init() != RK_SUCCESS) {
@@ -201,16 +190,8 @@ int main(int argc, char *argv[])
 	fmt.fmt.pix_mp.height = height;
 	fmt.fmt.pix_mp.pixelformat = V4L2_PIX_FMT_SBGGR8;
 	fmt.fmt.pix_mp.field = V4L2_FIELD_ANY;
-	fmt.fmt.pix_mp.num_planes = 1; // For BG10
-	if (ioctl(fd, VIDIOC_S_FMT, &fmt) < 0) {
-		perror("Setting Pixel Format");
-		close(fd);
-		return 1;
-	}
-
-	// Print actual format details
-	printf("Actual format: %dx%d, pixelformat: %.4s\n", fmt.fmt.pix_mp.width, fmt.fmt.pix_mp.height,
-	       (char *)&fmt.fmt.pix_mp.pixelformat);
+	fmt.fmt.pix_mp.num_planes = 1;
+	xioctl(fd, VIDIOC_S_FMT, &fmt);
 
 	// Request buffers
 	struct v4l2_requestbuffers req;
@@ -218,11 +199,7 @@ int main(int argc, char *argv[])
 	req.count = BUFFER_COUNT;
 	req.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
 	req.memory = V4L2_MEMORY_MMAP;
-	if (ioctl(fd, VIDIOC_REQBUFS, &req) < 0) {
-		perror("Requesting Buffer");
-		close(fd);
-		return 1;
-	}
+	xioctl(fd, VIDIOC_REQBUFS, &req);
 
 	// Map buffers
 	struct buffer buffers[BUFFER_COUNT];
@@ -236,11 +213,8 @@ int main(int argc, char *argv[])
 		buf.index = i;
 		buf.length = 1; // Number of planes
 		buf.m.planes = planes;
-		if (ioctl(fd, VIDIOC_QUERYBUF, &buf) < 0) {
-			perror("Querying Buffer");
-			close(fd);
-			return 1;
-		}
+		xioctl(fd, VIDIOC_QUERYBUF, &buf);
+
 		buffers[i].length = planes[0].length;
 		buffers[i].start = mmap(NULL, planes[0].length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, planes[0].m.mem_offset);
 		if (buffers[i].start == MAP_FAILED) {
@@ -261,25 +235,20 @@ int main(int argc, char *argv[])
 		buf.index = i;
 		buf.length = 1; // Number of planes
 		buf.m.planes = planes;
-		if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) {
-			perror("Queue Buffer");
-			close(fd);
-			return 1;
-		}
+		xioctl(fd, VIDIOC_QBUF, &buf);
 	}
 
 	// Start streaming
 	enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
-	if (ioctl(fd, VIDIOC_STREAMON, &type) < 0) {
-		perror("Start Capture");
-		close(fd);
-		return 1;
-	}
+	xioctl(fd, VIDIOC_STREAMON, &type);
+
 	printf("V4L2 initialized successfully\n");
+
+	int frame_count = 0;
 
 	while (1) {
 		h264_frame.stVFrame.u32TimeRef = H264_TimeRef++;
-		h264_frame.stVFrame.u64PTS = TEST_COMM_GetNowUs();
+		h264_frame.stVFrame.u64PTS = get_now_us();
 
 		struct v4l2_buffer buf;
 		struct v4l2_plane planes[VIDEO_MAX_PLANES];
@@ -290,55 +259,44 @@ int main(int argc, char *argv[])
 		buf.length = 1; // Number of planes
 		buf.m.planes = planes;
 
-		if (ioctl(fd, VIDIOC_DQBUF, &buf) < 0) {
-			perror("Retrieving Frame");
-			break;
-		}
+		xioctl(fd, VIDIOC_DQBUF, &buf);
 
-		size_t data_size = planes[0].bytesused;
-		size_t max_size = width * height;
-		if (data_size > max_size) {
-			data_size = max_size; // Limit to expected size
-		}
-		memcpy(buf_in, buffers[buf.index].start, data_size);
+		rgbir_to_bggr(buffers[buf.index].start, buffer, width, height);
 
-		if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) {
-			perror("Requeue Buffer");
-			break;
-		}
-
-		rgbir_to_bggr(buf_in_bggr, buf_in, width, height);
+		xioctl(fd, VIDIOC_QBUF, &buf);
 
 		struct mpix_image img;
 		struct mpix_format fmt = { .fourcc = MPIX_FMT_SBGGR8, .width = width, .height = height };
-		mpix_image_from_buf(&img, buf_in_bggr, width * height, &fmt);
+		mpix_image_from_buf(&img, buffer, width * height, &fmt);
 		mpix_image_debayer(&img, 2);
 		mpix_image_correct_white_balance(&img);
 		mpix_image_ctrl_value(&img, MPIX_CID_RED_BALANCE, 1.2 * (1 << 10));
 		mpix_image_ctrl_value(&img, MPIX_CID_BLUE_BALANCE, 1.55 * (1 << 10));
 		mpix_image_to_buf(&img, data, width * height * 3);
 
-		mpix_print_pipeline(img.first_op);
-
 		mpix_image_free(&img);
-
-		sprintf(fps_text, "fps = %.2f", fps);
-		printf("fps = %.2f\n", fps);
 
 		// send stream
 		// encode H264
 		RK_MPI_VENC_SendFrame(0, &h264_frame, -1);
 
 		// rtsp
-		s32Ret = RK_MPI_VENC_GetStream(0, &stFrame, -1);
+		RK_S32 s32Ret = RK_MPI_VENC_GetStream(0, &stFrame, -1);
 		if (s32Ret == RK_SUCCESS) {
 			if (g_rtsplive && g_rtsp_session) {
 				void *pData = RK_MPI_MB_Handle2VirAddr(stFrame.pstPack->pMbBlk);
 				rtsp_tx_video(g_rtsp_session, (uint8_t *)pData, stFrame.pstPack->u32Len, stFrame.pstPack->u64PTS);
 				rtsp_do_event(g_rtsplive);
 			}
-			RK_U64 nowUs = TEST_COMM_GetNowUs();
-			fps = (float)1000000 / (float)(nowUs - h264_frame.stVFrame.u64PTS);
+			RK_U64 nowUs = get_now_us();
+			float fps = (float)1000000 / (float)(nowUs - h264_frame.stVFrame.u64PTS);
+
+			// Print FPS only every 10 frames
+			frame_count++;
+			if (frame_count % 10 == 0) {
+				printf("\rFPS: %.1f", fps);
+				fflush(stdout);
+			}
 		}
 
 		s32Ret = RK_MPI_VENC_ReleaseStream(0, &stFrame);
@@ -353,7 +311,7 @@ int main(int argc, char *argv[])
 	RK_MPI_MB_DestroyPool(src_Pool);
 
 	// Free allocated buffers
-	free(buf_in);
+	free(buffer);
 
 	// Unmap buffers
 	for (int i = 0; i < BUFFER_COUNT; ++i) {
