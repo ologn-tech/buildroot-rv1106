@@ -307,12 +307,6 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		int32_t color_matrix_q10[9] = {
-			1.0 * (1 << 10), 0.0 * (1 << 10), 0.0 * (1 << 10), /* Row 0 */
-			0.0 * (1 << 10), 1.0 * (1 << 10), 0.0 * (1 << 10), /* Row 1 */
-			0.0 * (1 << 10), 0.0 * (1 << 10), 1.0 * (1 << 10), /* Row 2 */
-		};
-
 		rgbir_to_bggr(buf_in_bggr, buf_in, width, height);
 
 		struct mpix_image img;
@@ -320,10 +314,8 @@ int main(int argc, char *argv[])
 		mpix_image_from_buf(&img, buf_in_bggr, width * height, &fmt);
 		mpix_image_debayer(&img, 2);
 		mpix_image_correct_white_balance(&img);
-		mpix_image_correct_color_matrix(&img);
 		mpix_image_ctrl_value(&img, MPIX_CID_RED_BALANCE, 1.2 * (1 << 10));
 		mpix_image_ctrl_value(&img, MPIX_CID_BLUE_BALANCE, 1.55 * (1 << 10));
-		mpix_image_ctrl_array(&img, MPIX_CID_COLOR_MATRIX, color_matrix_q10);
 		mpix_image_to_buf(&img, data, width * height * 3);
 
 		mpix_print_pipeline(img.first_op);
