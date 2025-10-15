@@ -249,10 +249,10 @@
 		};
 	};
 
-	ov2312: ov2312@10 {
+	ov2312: ov2312@60 {
 		compatible = "ovti,ov2312";
 		status = "okay";
-		reg = <0x10>;
+		reg = <0x60>;
 		clocks = <&cru MCLK_REF_MIPI0>;
 		clock-names = "xvclk";
 		reset-gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
