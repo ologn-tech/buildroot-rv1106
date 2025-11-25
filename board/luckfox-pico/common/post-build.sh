@@ -35,6 +35,8 @@ install -m 0755 $BOARD_DIR/S20loadmodules $TARGET_DIR/etc/init.d/S20loadmodules
 install -m 0755 $BOARD_DIR/S49usbgadget $TARGET_DIR/etc/init.d/S49usbgadget
 
 install -m 0644 $BOARD_DIR/ox03c10_OX03C10_30IRC-F16.json $TARGET_DIR/etc/iqfiles/ox03c10_OX03C10_30IRC-F16.json
+install -m 0644 $BOARD_DIR/os04a10_OS04A10_50IRC-F16.json $TARGET_DIR/etc/iqfiles/os04a10_OS04A10_50IRC-F16.json
+install -m 0644 $BOARD_DIR/og02b10_og02b10_30IRC-F16.json $TARGET_DIR/etc/iqfiles/og02b10_og02b10_30IRC-F16.json
 
 # Check if e2fsprogs resize2fs is enabled and install S10resize2fs script
 if grep -q "BR2_PACKAGE_E2FSPROGS_RESIZE2FS=y" $BR2_CONFIG; then
