@@ -6,7 +6,7 @@
 		},
 		"Gain2Reg":	{
 			"GainMode":	"EXPGAIN_MODE_LINEAR",
-			"GainRange":	[1, 128, 64, 0, 1, 64, 8192],
+			"GainRange":	[1, 246.45, 16, 0, 1, 16, 3943],
 			"GainRange_len":	7
 		},
 		"Time2Reg":	{
@@ -15,7 +15,7 @@
 		"CISGainSet":	{
 			"CISAgainRange":	{
 				"Min":	1,
-				"Max":	128
+				"Max":	15.5
 			},
 			"CISExtraAgainRange":	{
 				"Min":	1,
@@ -23,7 +23,7 @@
 			},
 			"CISDgainRange":	{
 				"Min":	1,
-				"Max":	1
+				"Max":	15.999
 			},
 			"CISIspDgainRange":	{
 				"Min":	1,
