@@ -2426,82 +2426,82 @@
 								"Setting_len":	2,
 								"Blc_Ref":	[{
 										"iso":	50,
-										"Reference_r":	119.5,
-										"Reference_gr":	119.5,
-										"Reference_gb":	120.5625,
-										"Reference_b":	120.5625
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	251.9375
 									}, {
 										"iso":	100,
-										"Reference_r":	119.125,
-										"Reference_gr":	119.0625,
-										"Reference_gb":	120.9375,
-										"Reference_b":	120.9375
+										"Reference_r":	252.0000,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	251.9375
 									}, {
 										"iso":	200,
-										"Reference_r":	115.875,
-										"Reference_gr":	116.3125,
-										"Reference_gb":	117.9375,
-										"Reference_b":	117.9375
+										"Reference_r":	252.1875,
+										"Reference_gr":	252.2500,
+										"Reference_gb":	251.8750,
+										"Reference_b":	251.7500
 									}, {
 										"iso":	400,
-										"Reference_r":	115.4375,
-										"Reference_gr":	115.4375,
-										"Reference_gb":	116.5625,
-										"Reference_b":	116.5625
+										"Reference_r":	244.1875,
+										"Reference_gr":	244.3125,
+										"Reference_gb":	243.8125,
+										"Reference_b":	243.7500
 									}, {
 										"iso":	800,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0625,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	1600,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0625,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	3200,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	6400,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	12800,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	25600,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	51200,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	102400,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	204800,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}],
 								"Blc_Ref_len":	13
 							},
@@ -10617,82 +10617,82 @@
 								"Setting_len":	2,
 								"Blc_Ref":	[{
 										"iso":	50,
-										"Reference_r":	119.5,
-										"Reference_gr":	119.5,
-										"Reference_gb":	120.5625,
-										"Reference_b":	120.5625
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	251.9375
 									}, {
 										"iso":	100,
-										"Reference_r":	119.125,
-										"Reference_gr":	119.0625,
-										"Reference_gb":	120.9375,
-										"Reference_b":	120.9375
+										"Reference_r":	252.0000,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	251.9375
 									}, {
 										"iso":	200,
-										"Reference_r":	115.875,
-										"Reference_gr":	116.3125,
-										"Reference_gb":	117.9375,
-										"Reference_b":	117.9375
+										"Reference_r":	252.1875,
+										"Reference_gr":	252.2500,
+										"Reference_gb":	251.8750,
+										"Reference_b":	251.7500
 									}, {
 										"iso":	400,
-										"Reference_r":	115.4375,
-										"Reference_gr":	115.4375,
-										"Reference_gb":	116.5625,
-										"Reference_b":	116.5625
+										"Reference_r":	244.1875,
+										"Reference_gr":	244.3125,
+										"Reference_gb":	243.8125,
+										"Reference_b":	243.7500
 									}, {
 										"iso":	800,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0625,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	1600,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0625,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	3200,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	6400,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	12800,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	25600,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	51200,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	102400,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}, {
 										"iso":	204800,
-										"Reference_r":	100.75,
-										"Reference_gr":	100.75,
-										"Reference_gb":	103.3125,
-										"Reference_b":	103.3125
+										"Reference_r":	252.0625,
+										"Reference_gr":	252.0625,
+										"Reference_gb":	252.0000,
+										"Reference_b":	252.0000
 									}],
 								"Blc_Ref_len":	13
 							},
