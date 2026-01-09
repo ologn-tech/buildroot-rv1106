@@ -1,7 +1,7 @@
 From 00a9e7fac890a20a1ef98ce9c1ad8419f4a11f78 Mon Sep 17 00:00:00 2001
 From: Huy Duong <huy.duong@ologn.tech>
 Date: Sat, 16 Aug 2025 19:56:37 +0700
-Subject: [PATCH 3/4] Make OpenCV_DIR configurable
+Subject: [PATCH 2/3] Make OpenCV_DIR configurable
 
 ---
  CMakeLists.txt | 12 +++++++++++-

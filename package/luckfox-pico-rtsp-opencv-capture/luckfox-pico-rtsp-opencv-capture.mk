@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-LUCKFOX_PICO_RTSP_OPENCV_CAPTURE_SITE = https://github.com/LuckfoxTECH/luckfox_pico_rkmpi_example
+LUCKFOX_PICO_RTSP_OPENCV_CAPTURE_SITE = https://github.com/ologn-tech/luckfox_pico_rkmpi_example
 LUCKFOX_PICO_RTSP_OPENCV_CAPTURE_SITE_METHOD = git
-LUCKFOX_PICO_RTSP_OPENCV_CAPTURE_VERSION = 55178250c05542b156ac94c8c08cecef46589abf
+LUCKFOX_PICO_RTSP_OPENCV_CAPTURE_VERSION = a4b37b350368cdf4787824deb8c2d74b51087367
 
 LUCKFOX_PICO_RTSP_OPENCV_CAPTURE_DEPENDENCIES = opencv4
 

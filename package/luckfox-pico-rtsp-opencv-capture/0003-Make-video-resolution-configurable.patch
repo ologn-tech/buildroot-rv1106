@@ -1,7 +1,7 @@
 From 765fe60997fd6ead5ed209d76258159c175c649e Mon Sep 17 00:00:00 2001
 From: Huy Duong <huy.duong@ologn.tech>
 Date: Sat, 16 Aug 2025 18:33:25 +0700
-Subject: [PATCH 4/4] Make video resolution configurable
+Subject: [PATCH 3/3] Make video resolution configurable
 
 ---
  CMakeLists.txt                                       | 5 ++++-
