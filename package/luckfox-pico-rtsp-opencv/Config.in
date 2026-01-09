@@ -1,0 +1,26 @@
+config BR2_PACKAGE_LUCKFOX_PICO_RTSP_OPENCV
+	bool "luckfox-pico-rtsp-opencv"
+	depends on BR2_PACKAGE_OPENCV4
+	depends on BR2_PACKAGE_OPENCV4_LIB_HIGHGUI
+	depends on BR2_PACKAGE_OPENCV4_WITH_RK
+	help
+	  Build RTSP OpenCV example for Luckfox Pico.
+
+comment "luckfox-pico-rtsp-opencv needs OpenCV4 with RK support and specific libraries"
+	depends on !BR2_PACKAGE_OPENCV4 || !BR2_PACKAGE_OPENCV4_LIB_HIGHGUI || !BR2_PACKAGE_OPENCV4_WITH_RK
+
+if BR2_PACKAGE_LUCKFOX_PICO_RTSP_OPENCV
+
+config BR2_PACKAGE_LUCKFOX_PICO_RTSP_OPENCV_WIDTH
+	int "Video width"
+	default 1920
+	help
+	  Width of the video capture in pixels.
+
+config BR2_PACKAGE_LUCKFOX_PICO_RTSP_OPENCV_HEIGHT
+	int "Video height"
+	default 1080
+	help
+	  Height of the video capture in pixels.
+
+endif
