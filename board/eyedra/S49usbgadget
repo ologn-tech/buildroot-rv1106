@@ -43,8 +43,7 @@ configure_usb_gadget() {
     echo "Rockchip" > /sys/kernel/config/usb_gadget/g1/strings/0x409/manufacturer
     echo "RV1106" > /sys/kernel/config/usb_gadget/g1/strings/0x409/product
 
-    # create function instances. here we create function for acm, adb, and ncm
-    mkdir -p /sys/kernel/config/usb_gadget/g1/functions/acm.usb0
+    # create function instances. here we create function for adb and ncm
     mkdir -p /sys/kernel/config/usb_gadget/g1/functions/ffs.adb
     mkdir -p /sys/kernel/config/usb_gadget/g1/functions/ncm.usb0
 
@@ -53,7 +52,7 @@ configure_usb_gadget() {
     # create english language strings
     mkdir -p /sys/kernel/config/usb_gadget/g1/configs/b.1/strings/0x409
     # write a description for this device configuration
-    echo "acm, adb, ncm" > /sys/kernel/config/usb_gadget/g1/configs/b.1/strings/0x409/configuration
+    echo "adb, ncm" > /sys/kernel/config/usb_gadget/g1/configs/b.1/strings/0x409/configuration
 
     # configure an attribute, maxpower in this case
     echo 500 > /sys/kernel/config/usb_gadget/g1/configs/b.1/MaxPower
@@ -66,7 +65,6 @@ configure_usb_gadget() {
     ln -s /sys/kernel/config/usb_gadget/g1/configs/b.1 /sys/kernel/config/usb_gadget/g1/os_desc/b.1
 
     # bind our function instance to its configuration
-    ln -s /sys/kernel/config/usb_gadget/g1/functions/acm.usb0 /sys/kernel/config/usb_gadget/g1/configs/b.1
     ln -s /sys/kernel/config/usb_gadget/g1/functions/ffs.adb /sys/kernel/config/usb_gadget/g1/configs/b.1
     ln -s /sys/kernel/config/usb_gadget/g1/functions/ncm.usb0 /sys/kernel/config/usb_gadget/g1/configs/b.1
 

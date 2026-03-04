@@ -11,6 +11,8 @@ install -D -m 0644 dl/rv1106-ipc-sdk/git/sysdrv/drv_ko/rockit/release_rockit-ko_
 
 install -D -m 0644 dl/rv1106-ipc-sdk/git/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/lib/librkaiq.so \
         $TARGET_DIR/usr/lib/librkaiq.so
+install -D -m 0755 dl/rv1106-ipc-sdk/git/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/bin/rkaiq_3A_server \
+        $TARGET_DIR/usr/bin/rkaiq_3A_server
 install -D -m 0644 dl/rv1106-ipc-sdk/git/media/iva/iva/librockiva/rockiva-rv1106-Linux/lib/librknnmrt.so \
         $TARGET_DIR/usr/lib/librknnmrt.so
 install -D -m 0644 dl/rv1106-ipc-sdk/git/media/iva/iva/librockiva/rockiva-rv1106-Linux/lib/librockiva.so \
@@ -26,10 +28,11 @@ install -D -m 0644 dl/rv1106-ipc-sdk/git/media/rga/release_rga_rv1106_arm-rockch
 install -D -m 0644 dl/rv1106-ipc-sdk/git/media/rockit/rockit/lib/lib32/librockit.so \
         $TARGET_DIR/usr/lib/librockit.so
 
+install -m 0755 $BOARD_DIR/rkaiq_tool_server $TARGET_DIR/usr/bin/rkaiq_tool_server
 install -m 0755 $BOARD_DIR/S20loadmodules $TARGET_DIR/etc/init.d/S20loadmodules
 install -m 0755 $BOARD_DIR/S49usbgadget $TARGET_DIR/etc/init.d/S49usbgadget
 
+install -m 0644 $BOARD_DIR/ov6211_WS-eye-track-S1-1025_default.json $TARGET_DIR/etc/iqfiles/ov6211_WS-eye-track-S1-1025_default.json
+
 install -m 0644 $BOARD_DIR/dhcpd.conf $TARGET_DIR/etc/dhcp/dhcpd.conf
 install -m 0644 $BOARD_DIR/fw_env.config $TARGET_DIR/etc/fw_env.config
-
-install -m 0644 $BOARD_DIR/ov6211_WS-eye-track-S1-1025_default.json $TARGET_DIR/etc/iqfiles/ov6211_WS-eye-track-S1-1025_default.json
