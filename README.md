@@ -77,13 +77,12 @@ customized embedded Linux images for:
    - Root filesystem image(s)
    - Additional board‑specific artifacts (e.g. DTB, firmware)
 
-### Supported Cameras
+### Additional Supported Camera Sensors
 
-This RV1106 Buildroot configuration supports a range of commonly used image sensors for camera applications:
+This RV1106 Buildroot configuration added support for these camera sensors:
 
 - **OV6211 (dual)**
 - **OX03C10**
 - **OV2312**
 - **OG02B10**
 - **IMX219**
-- **IMX415**
