@@ -268,7 +268,7 @@
 				remote-endpoint = <&os04a10_out>;
 				data-lanes = <1 2>;
 			};
-			
+
 			csi_dphy_input6: endpoint@6 {
 				reg = <6>;
 				remote-endpoint = <&og02b10_out>;

@@ -10,6 +10,7 @@ load_modules() {
     modprobe ov2312
     modprobe ox03c10
     modprobe sc3336
+    modprobe mis5001
     modprobe os04a10
     modprobe og02b10
     echo 1 > /sys/module/video_rkcif/parameters/clr_unready_dev
