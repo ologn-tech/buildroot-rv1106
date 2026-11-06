@@ -34,7 +34,8 @@ install -D -m 0644 dl/rv1106-ipc-sdk/git/media/rockit/rockit/lib/lib32/librockit
 
 install -m 0755 $BOARD_DIR/rkaiq_tool_server $TARGET_DIR/usr/bin/rkaiq_tool_server
 install -m 0755 $BOARD_DIR/S20loadmodules $TARGET_DIR/etc/init.d/S20loadmodules
-install -m 0755 $BOARD_DIR/S49usbgadget $TARGET_DIR/etc/init.d/S49usbgadget
+install -m 0755 $BOARD_DIR/S49usbgadget $TARGET_DIR/etc/init.d/S05usbgadget
+rm -f $TARGET_DIR/etc/init.d/S49usbgadget
 
 install -m 0644 $BOARD_DIR/ox03c10_OX03C10_30IRC-F16.json $TARGET_DIR/etc/iqfiles/ox03c10_OX03C10_30IRC-F16.json
 install -m 0644 $BOARD_DIR/os04a10_OS04A10_50IRC-F16.json $TARGET_DIR/etc/iqfiles/os04a10_OS04A10_50IRC-F16.json
