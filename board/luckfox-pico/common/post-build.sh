@@ -29,8 +29,6 @@ install -D -m 0644 dl/rv1106-ipc-sdk/git/media/mpp/release_mpp_rv1106_arm-rockch
         $TARGET_DIR/usr/lib/librockchip_mpp.so.1
 install -D -m 0644 dl/rv1106-ipc-sdk/git/media/rga/release_rga_rv1106_arm-rockchip830-linux-uclibcgnueabihf/lib/librga.so \
         $TARGET_DIR/usr/lib/librga.so
-install -D -m 0644 dl/rv1106-ipc-sdk/git/media/rockit/rockit/lib/lib32/librockit.so \
-        $TARGET_DIR/usr/lib/librockit.so
 
 install -m 0755 $BOARD_DIR/rkaiq_tool_server $TARGET_DIR/usr/bin/rkaiq_tool_server
 install -m 0755 $BOARD_DIR/S20loadmodules $TARGET_DIR/etc/init.d/S20loadmodules

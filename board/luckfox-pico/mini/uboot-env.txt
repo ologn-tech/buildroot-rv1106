@@ -1,2 +1,2 @@
-mtdparts=spi-nand0:256K(env),256K@256K(idblock),512K(uboot),4M(boot),121M(rootfs)
-sys_bootargs=ubi.mtd=4 root=ubi0:rootfs rootfstype=ubifs rk_dma_heap_cma=24M
+mtdparts=spi-nand0:256K(env),256K@256K(idblock),512K(uboot),8M(boot),116M(rootfs)
+sys_bootargs=ubi.mtd=4 root=ubi0:rootfs rootfstype=ubifs rk_dma_heap_cma=24M console=ttyFIQ0 vt.global_cursor_default=0
