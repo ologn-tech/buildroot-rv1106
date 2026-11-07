@@ -60,6 +60,13 @@
 	cpu-supply = <&vdd_arm>;
 };
 
+/***************************** UART ********************************/
+&uart1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1m2_xfer>;
+};
+
 /***************************** USB ********************************/
 &u2phy_otg {
 	rockchip,dis-u2-susphy;
